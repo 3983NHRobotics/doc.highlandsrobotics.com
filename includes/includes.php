@@ -5,7 +5,6 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Font Awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/blag.css">
 <!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

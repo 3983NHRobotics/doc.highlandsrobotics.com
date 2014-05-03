@@ -1,11 +1,44 @@
 <!DOCTYPE html>
+
+<?php
+
+session_start();
+include('includes/config.php');
+$_SESSION['theme'] = $theme;
+
+?>
+
 <html lang="en">
   <head>
     <title>Blag Test</title>
     <?php
-    	include('/includes/includes.php');
     	include('/includes/paths.php');
+
+    	if ($_SESSION['theme'] == 'light') {
+    		echo '<link rel="stylesheet" href="css/blag-light.css">';
+    	} else if ($_SESSION['theme'] == 'gray') {
+    		echo '<link rel="stylesheet" href="css/blag-med.css">';
+    	} else if ($_SESSION['theme'] == 'dark') {
+    		echo '<link rel="stylesheet" href="css/blag-dark.css">';
+    	} else { //load custom stylesheet
+    		echo '<link rel="stylesheet" href="css/blag-custom.css">';
+    	}
     ?>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Font Awesome -->
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	
+<!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/blag.js"></script>
+    <script src="js/blag_parser.js"></script>
+
 <script type="text/javascript">
 clearHeader = function() {
 	$('.header').empty();
@@ -15,22 +48,26 @@ clearHeader = function() {
   </head>
 <body>
 
-
+	<div class="alert-error" id="errordiv">
+		Error goes here
+	</div>
 
 	<?php
-		$pagemode = 'user';
 		
 		require('includes/user.php');
 
 		function checkMode($type) {
-			//echo 'Checked page mode ';
-			global $pagemode;
 
-			if ($pagemode === 'admin') {
+			global $unamesub;
+
+			if ($_SESSION['mode'] === 'admin') {
 
 				?>
 					<script type="text/javascript">
 					$('.header').remove();
+					$('.homebtn').mouseenter(function() {
+						$(this).addClass('animated bounce');
+					});
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
@@ -38,12 +75,14 @@ clearHeader = function() {
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-							<span class='msg-welcome'>Welcome, Admun :3</span>
+							<span class='msg-welcome'>Heyo, <?php echo $_SESSION['user']; ?>!</span>
 						</span>
 					</div>
 				<?php
 				//echo "pagemode = admin<br> ";
-			} else if ($pagemode === 'user') {
+			} else if ($_SESSION['mode'] === 'user') {
+				$_SESSION['user'] = 'Guest';
+
 				?>
 					<script type="text/javascript">
 					$('.header-admin').remove();
@@ -71,33 +110,6 @@ clearHeader = function() {
 
 		checkMode('init');
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
-	?>
-
-	<?php
-		
-
-		if(isset($_POST['Login'])) {
-			$unamesub = $_POST['unamesub'];
-			$upassSHA = sha1($_POST['upasssub']);
-
-			if ($unamesub == $uname) {
-				if ($upassSHA == $upass) {
-					//echo 'success';
-					$pagemode = 'admin';
-					checkMode('login');
-				} else {
-					//echo 'incorrect password';
-				}
-			} else {
-				//echo 'incorrect username';
-			}
-		}
-
-		if(isset($_POST['Logout'])) {
-			$pagemode = 'user';
-			header('Location: index.php');
-			checkMode('logout');
-		}
 
 		$json = file_get_contents("pages/posts.json");
 
@@ -111,7 +123,7 @@ clearHeader = function() {
 			        echo "</div><div class='blag-body'>
 			        	  <h3>$key</h3><br>";
 			    } else {
-			    	if ($val != 'posted') {
+			    	if ($val != 'date') {
 			       		echo "$val<br>";
 			    	}
 			    }
@@ -124,7 +136,7 @@ clearHeader = function() {
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
-		  <form action="" method="post" name="login" id="login" onsubmit="">
+		  <form action="login.php" method="post" name="login" id="login" onsubmit="">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-unlock"></i> Site unlock</h4>
@@ -147,9 +159,9 @@ clearHeader = function() {
   </div>
 </div>
 
-<form method="post" name="logout" id="logout">
-<input type="hidden" value="logout">
-</form>
+	<form action="login.php" method="post" name="logout" id="logout">
+		<input type="hidden" value="logout">
+	</form>
 
  <!--    This thing is to make the ugly stuff into pretty stuff -->
     <script>//parseBlag();</script>
