@@ -1,8 +1,8 @@
 <?php 
 
-$uname = "5528d7174f41aced718cfbd4b5722b527efd2b14";
+$uname = "d033e22ae348aeb5660fc2140aec35850c4da997";
 
-$upass = "3214fb3ea9f28b71d913b4654b2b19fbf5830cd1";
+$upass = "d02ee5065aece2fcc2937d7c4b5a74a9af05dbd9";
 
 $installed = true;
 
