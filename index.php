@@ -5,6 +5,12 @@
 session_start();
 include('includes/config.php');
 $_SESSION['theme'] = $theme;
+if (!isset($_SESSION['mode'])) {
+	$_SESSION['mode'] = 'user';
+}
+if(!isset($_SESSION['user'])) {
+	$_SESSION['user'] = 'Guest';
+}
 
 ?>
 
@@ -38,13 +44,6 @@ $_SESSION['theme'] = $theme;
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
     <script src="js/blag_parser.js"></script>
-
-<script type="text/javascript">
-clearHeader = function() {
-	$('.header').empty();
-	console.log('Form Submitted');
-}
-</script>
   </head>
 <body>
 
@@ -75,7 +74,7 @@ clearHeader = function() {
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-							<span class='msg-welcome'>Heyo, <?php echo $_SESSION['user']; ?>!</span>
+							<span class='msg-welcome'>Heyo, <?php echo $_SESSION['username']; ?>!</span>
 						</span>
 					</div>
 				<?php
@@ -111,6 +110,13 @@ clearHeader = function() {
 		checkMode('init');
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
+		//display the greeting post
+
+		echo '<div class="blag-body">
+				<h2> '. $greeting .'</h2>
+				<h4>' . $greetingContent . '</h4>
+			  </div>';
+
 		$json = file_get_contents("pages/posts.json");
 
 		$jsonIterator = new RecursiveIteratorIterator(
@@ -127,7 +133,6 @@ clearHeader = function() {
 			       		echo "$val<br>";
 			    	}
 			    }
-			
 		}
 
 	?>

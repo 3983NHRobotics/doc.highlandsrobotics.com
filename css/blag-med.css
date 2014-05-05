@@ -1,6 +1,6 @@
 @import '/css/fonts.css';
 
-	* { text-decoration: none !important; list-style-type: none !important;=}
+	* { text-decoration: none !important; list-style-type: none !important;}
 
 	html, body {
     	height: 100%;
@@ -54,17 +54,21 @@ body {
 .posts-container-admin {
 	position: relative;
 	width: 25%;
-	height: 100%;
-	top: 30px;
+	height: auto;
+	max-height: 100%;
+	top: 0px;
 	left: 0px;
+	float: left;
 }
 
 .main-container-admin {
-	position: absolute;
+	position: relative;
 	right: 0px;
 	top: 0px;
 	width: 75%;
-	height: 100%;
+	height: auto;
+	max-height: 100%;
+	float: right;
 }
 
 .blag-body-admin {
@@ -196,7 +200,7 @@ body {
 
 	.blag-login-body {
 		width: 30%;
-		margin: 20% auto 0px auto;
+		margin: 15% auto 0px auto;
 	}
 	.loginpage-content {
 		width: 100%;

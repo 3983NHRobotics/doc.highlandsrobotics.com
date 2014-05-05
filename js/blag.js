@@ -11,11 +11,11 @@ displayLoginError = function(type, errortype) {
 		}
 
 		//$('#errordiv').fadeIn(1000);
-		$('#errordiv').fadeTo(1000, 1);
+		$('#errordiv').fadeTo(600, 1);
 
 	} else if (type === 'success') {
 		$("#errordiv").removeClass('alert-error').addClass('alert-success');
-		$('#errordiv').fadeTo(1000, 1);
+		$('#errordiv').fadeTo(600, 1);
 	}
 
 	setTimeout(function() {

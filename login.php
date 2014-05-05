@@ -43,12 +43,6 @@ $_SESSION['mode'] = 'user';
     <script src="js/blag.js"></script>
     <script src="js/blag_parser.js"></script>
 
-<script type="text/javascript">
-clearHeader = function() {
-	$('.header').empty();
-	console.log('Form Submitted');
-}
-</script>
   </head>
 <body>
 
@@ -134,14 +128,15 @@ clearHeader = function() {
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
 		if(isset($_POST['Login'])) {
-			$unamesub = $_POST['unamesub'];
-			$upassSHA = sha1($_POST['upasssub']);
+			$unamesub = sha1($_POST['unamesub']);
+			$upassSHA = sha1(md5(md5($_POST['upasssub'])));
 
-			if ($unamesub == $uname) {
-				if ($upassSHA == $upass) {
+			if ($unamesub === $uname) {
+				if ($upassSHA === $upass) {
 					//echo 'success';
 					$_SESSION['mode'] = 'admin';
 					$_SESSION['user'] = $unamesub;
+					$_SESSION['username'] = $_POST['unamesub'];
 					checkMode('login');
 					header('Location: index.php');
 					die();

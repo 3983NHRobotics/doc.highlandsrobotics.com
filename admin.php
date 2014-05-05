@@ -52,7 +52,7 @@ session_start();
 		<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 		<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 		<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-		<span class='msg-welcome'>Heyo, <?php echo $_SESSION['user']; ?>!</span>
+		<span class='msg-welcome'>Heyo, <?php echo $_SESSION['username']; ?>!</span>
 	</span>
 </div>	
 
@@ -62,6 +62,7 @@ session_start();
 
 	if ($_SESSION['mode'] === 'admin') {
 
+		/*
 		$file = 'pages/posts.json';
 
 		$json = file_get_contents($file);
@@ -70,7 +71,7 @@ session_start();
 	    new RecursiveArrayIterator(json_decode($json, TRUE)),
 	    RecursiveIteratorIterator::SELF_FIRST);
 
-				echo '<ul class="posts-container-admin">';
+				echo '<ul class="posts-container-admin" style="margin-left: -25px;">';
 		foreach ($jsonIterator as $key => $val) {
 		    if(is_array($val)) {
 		        echo "</li><li class='blag-body-admin'>
@@ -85,7 +86,7 @@ session_start();
 		        	  
 		        	  </h4><br>";
 		    } else {
-		        echo "$val<br>";
+		        //echo "$val<br>";
 		    }
 		}
 			echo '</ul>';
@@ -104,45 +105,60 @@ session_start();
 
 			file_put_contents($file, json_encode($array));
 
-		} ?>
+		} 
+		*/
 
-<!-- <div class="main-container-admin">
+		require('includes/config.php');
 
-</div> -->
+		?>
+
+<div class="main-container-admin">
+	<form action="" method="post" name="savesettings" id="savesettings">
+		<div class="admin-control admin-control-style">
+		<div class="ac-title">Titles:</div>
+
+		<label class="acc-title">Site Name:</label>
+		<input class="acc-content" name="sitename" id="sitename" type="text" value="<?php echo $title; ?>">
+
+		</div>
+		<div class="admin-control admin-control-sitedata">
+		<div class="ac-title">Greeting post:</div>
+
+		<label class="acc-title">Site greeting:</label>
+		<input class="acc-content" name="sitegreeting" id="sitegreeting" type="text" value="<?php echo $greeting; ?>">
+		<label class="acc-title">Site greeting content:</label>
+		<textarea style="width: 95%" class="acc-content" name="sitegreeting-content" id="sitegreeting-content" type="text"><?php echo $greetingContent; ?></textarea>
+
+		</div>
+		<div class="admin-control admin-control-settings">
+		<div class="ac-title">Color settings:</div>
+
+		<ul style="margin-left: -25px;">
+		<li><input class="acc-radio" type="radio" name="theme" value="light" size="17" <?php echo ($theme=='light')?'checked':'' ?>><span class="acc-content">Light stylesheet</span>
+		<li><input class="acc-radio" type="radio" name="theme" value="gray" size="17" <?php echo ($theme=='gray')?'checked':'' ?>><span class="acc-content">Gray stylesheet</span>
+		<li><input class="acc-radio" type="radio" name="theme" value="dark" size="17" <?php echo ($theme=='dark')?'checked':'' ?>><span class="acc-content">Dark stylesheet</span>
+		<li><input class="acc-radio" type="radio" name="theme" value="custom" size="17" <?php echo ($theme=='custom')?'checked':'' ?>><span class="acc-content">Custom stylesheet</span>
+		</ul>
+
+		</div>
+		<div class="admin-control admin-control-reset">
+		<div class="ac-title">Site Reset</div>
+		</div>
+	</form>
+</div>
 
 	<form action="login.php" method="post" name="logout" id="logout">
 	<input type="hidden" value="logout">
 	</form>
 
 		<?php
-	} else { ?>
-
-	GOWAI
-
-	<?php
+	} else { 
+		//If user is not logged in and is not admin
+		header('Location: index.php');
+		die();
 
 	}
-
-		//unset($jsonIterator['Test']);
-		//file_put_contents($file, json_encode($jsonIterator));
 	?>
-
-
- <!--    This thing is to make the ugly stuff into pretty stuff -->
-    <script>//parseBlag();</script>
-    <!-- Markdown parsy thing -->
-    <!--<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>-->
-
-	<!--<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-	  ga('create', 'UA-48081162-1', 'villa7.github.io');
-	  ga('send', 'pageview');
-
-	</script> -->
 
 </body>
 </html>

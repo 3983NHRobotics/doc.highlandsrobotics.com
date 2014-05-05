@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../css/bootstrap.min.css">
     <!-- Font Awesome -->
   <link rel="stylesheet" href="../css/font-awesome.min.css">
-  <link rel="stylesheet" href="../css/blag.css">
+  <link rel="stylesheet" href="../css/blag-light.css">
 
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
@@ -18,6 +18,9 @@
 
   </head>
 <body>
+<div class="alert-error" id="errordiv">
+    Error goes here
+  </div>
 <?php
 
 include('../includes/user.php');
@@ -26,9 +29,9 @@ if (isset($_POST["Submit"])) {
 
 $string = '<?php 
 
-$uname = "' . $_POST["uname"] . '";
+$uname = "' . sha1($_POST["uname"]) . '";
 
-$upass = "' . sha1($_POST["upass"]) . '";
+$upass = "' . sha1(md5(md5($_POST["upass"]))) . '";
 
 $installed = true;
 
@@ -52,15 +55,15 @@ $installed = true;
 <div class="blag-body">
   <form action="" method="post" name="install" id="install">
     <p>
-      <input name="uname" type="text" id="uname" value=""> 
-      Set a username
+      <label class="loginpage-content-title"><i class="fa fa-user"></i> Set a username.</label>
+      <input class="loginpage-content" name="uname" type="text" id="uname" value=""> 
   </p>
     <p>
-      <input name="upass" type="password" id="upass"> 
-      Set a password. <br>This is an unencrypted password - make up a new one for this (unless SSL is working).
+      <label class="loginpage-content-title"><i class="fa fa-lock"></i>Set a password.</label>
+      <input class="loginpage-content" name="upass" type="password" id="upass"> 
   </p>
     <p>
-      <input type="submit" name="Submit" value="Install">
+      <button class="btn btn-submit" type="submit" name="Submit" value="Install">Install</button>
     </p>
   </form>
 </div>
