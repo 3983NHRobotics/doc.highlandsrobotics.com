@@ -253,7 +253,7 @@ hr {
 }
 
 .admin-control {
-	padding: 10px 5px 13px 5px;
+	padding: 0px 5px 13px 5px;
 	width: 33.3333333333333333333333333%;
 	min-height: 200px;
 	float: left;
@@ -264,20 +264,33 @@ hr {
 .ac-title {
 	padding-left: 10px;
 	width: 100%;
-	/*font-weight: bold;*/
 	font-size: 20px;
+	/*padding-top: 10px;*/
+	margin-top: 10px;
 	margin-bottom: 10px;
 	border-bottom: #444 1px solid;
+	border-top: #444 1px solid;
+	border-radius: 10px;
+	color: #aaa;
+	/*border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;*/
+	/*background: rgba(0,0,0,.15);*/
 }
 .acc-title {
 	padding-left: 10px;
 	width: 100%;
+	color: #aaa;
 }
 .acc-content {
-	padding-left: 10px;
+	/*padding-left: 10px;*/
 	width: 60%;
 	margin-left: 10px;
 	font-style: italic;
+	color: #aaa;
+}
+.acc-content[type=text] {
+	background: rgba(255,255,255,.1);
+	border-color: rgba(0,0,0,0);
 }
 
 .acc-radio {

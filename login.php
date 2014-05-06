@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-
 <?php
-
 session_start();
 
 include('includes/config.php');
 
 $_SESSION['theme'] = $theme;
-$_SESSION['user'] = NULL;
-$_SESSION['mode'] = 'user';
+//if (!isset($_SESSION['mode'])) {
+	$_SESSION['mode'] = 'user';
+//}
+if(!isset($_SESSION['user'])) {
+	$_SESSION['user'] = 'Guest';
+}
 
 ?>
 
@@ -103,7 +105,7 @@ $_SESSION['mode'] = 'user';
 							<label class="loginpage-content-title"><i class="fa fa-unlock-alt"></i> Password</label>
 						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password"> 
 
-				        <button type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
+				        <button style="visibility: hidden" type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
 
 				       </div>
 				  	</form>
@@ -138,18 +140,19 @@ $_SESSION['mode'] = 'user';
 					$_SESSION['user'] = $unamesub;
 					$_SESSION['username'] = $_POST['unamesub'];
 					checkMode('login');
-					header('Location: index.php');
+					header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 					die();
 				} else {
-					echo "<script type='text/javascript'>displayLoginError('error', 'pass')</script>";
+					echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
 				}
 			} else {
-				echo "<script type='text/javascript'>displayLoginError('error', 'name')</script>";
+				echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect username')</script>";
 			}
 		}
 
 		if(isset($_POST['Logout'])) {
 			$_SESSION['user'] = 'Guest';
+			$_SESSION['username'] = 'Guest';
 			$_SESSION['mode'] = 'user';
 			checkMode('logout');
 			//header('Location: index.php');

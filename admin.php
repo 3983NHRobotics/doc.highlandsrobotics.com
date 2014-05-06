@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <?php
-
 session_start();
+
+if (!isset($_SESSION['mode'])) {
+	$_SESSION['mode'] = 'user';
+}
+if(!isset($_SESSION['user'])) {
+	$_SESSION['user'] = 'Guest';
+}
 
 ?>
 <html lang="en">
@@ -108,6 +114,23 @@ session_start();
 		} 
 		*/
 
+		if(isset($_POST['savesettings'])) {
+			$settings = '<?php
+			$theme = "' . $_POST['theme'] . '";
+			$title = "' . $_POST['sitename'] . '";
+			$greeting = "' . $_POST['sitegreeting'] . '";
+			$greetingContent = "' . $_POST['sitegreeting-content'] . '";
+			?>';
+
+			$fp = fopen("includes/config.php", "w");
+        	fwrite($fp, $settings);
+        	fclose($fp);
+
+        	$_SESSION['theme'] = $_POST['theme'];
+
+        	header('Location: ' . $_SERVER['REQUEST_URI']);
+		}
+
 		require('includes/config.php');
 
 		?>
@@ -143,6 +166,11 @@ session_start();
 		</div>
 		<div class="admin-control admin-control-reset">
 		<div class="ac-title">Site Reset</div>
+		</div>
+
+		<div class="admin-control admin-control-save">
+		<div class="ac-title">Save settings</div>
+		<button type="submit" name="savesettings" class="btn btn-submit">Save settings</button>
 		</div>
 	</form>
 </div>

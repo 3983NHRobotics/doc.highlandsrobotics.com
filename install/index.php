@@ -46,7 +46,7 @@ $installed = true;
         fclose($fp);
 
     } else {
-        echo "Blag is already installed.";
+        echo "<script type='text/javascript'>displayLoginError('error', 'Blag is already installed')</script>";
     }
 }
 

@@ -221,3 +221,49 @@ hr {
 	width: 40%;
 	margin: 0px auto 0px auto;
 }
+
+.admin-control {
+	padding: 0px 5px 13px 5px;
+	width: 33.3333333333333333333333333%;
+	min-height: 200px;
+	float: left;
+	border-bottom: #444 1px solid;
+	border-right: #444 1px solid;
+}
+
+.ac-title {
+	padding-left: 10px;
+	width: 100%;
+	font-size: 20px;
+	/*padding-top: 10px;*/
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-bottom: #444 1px solid;
+	border-top: #444 1px solid;
+	border-radius: 10px;
+	color: #222;
+	/*border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;*/
+	/*background: rgba(0,0,0,.15);*/
+}
+.acc-title {
+	padding-left: 10px;
+	width: 100%;
+	color: #222;
+}
+.acc-content {
+	/*padding-left: 10px;*/
+	width: 60%;
+	margin-left: 10px;
+	font-style: italic;
+	color: #222;
+}
+.acc-content[type=text] {
+	background: rgba(255,255,255,.3);
+	border-color: rgba(0,0,0,0);
+}
+
+.acc-radio {
+	padding-left: 10px;
+	width: 15px;
+}

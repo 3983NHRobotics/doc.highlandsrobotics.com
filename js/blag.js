@@ -1,14 +1,9 @@
-displayLoginError = function(type, errortype) {
+displayLoginError = function(type, errormessage) {
 
 	if(type === 'error') {
 	$("#errordiv").removeClass('alert-success').addClass('alert-error');
-		if(errortype === 'name') {
-			$('#errordiv').html('Incorrect username.');
-		} else if (errortype === 'pass') {
-			$('#errordiv').html('Incorrect password.');
-		} else {
-			$('#errordiv').html('Incorrect username or password.');
-		}
+		
+			$('#errordiv').html(errormessage + '.');
 
 		//$('#errordiv').fadeIn(1000);
 		$('#errordiv').fadeTo(600, 1);

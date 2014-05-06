@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <?php
-
 session_start();
 include('includes/config.php');
 $_SESSION['theme'] = $theme;
@@ -11,7 +9,6 @@ if (!isset($_SESSION['mode'])) {
 if(!isset($_SESSION['user'])) {
 	$_SESSION['user'] = 'Guest';
 }
-
 ?>
 
 <html lang="en">
