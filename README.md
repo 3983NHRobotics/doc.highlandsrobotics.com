@@ -11,6 +11,9 @@ Why use something that someone has made when you can use your own?<br>
 (other than the obvious reasons...)
 <br>
 
+Uses the awesome [TinyMCE](http://www.tinymce.com/ "TinyMCE website") for the edit page if you want it to.
+<br>
+
 <br>
 note: the pabian.me server seems to have something wrong with running php correctly.
 I cannot fix that because I do not own the website :(
