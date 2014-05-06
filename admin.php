@@ -77,26 +77,6 @@ if(!isset($_SESSION['user'])) {
 	    new RecursiveArrayIterator(json_decode($json, TRUE)),
 	    RecursiveIteratorIterator::SELF_FIRST);
 
-				echo '<ul class="posts-container-admin" style="margin-left: -25px;">';
-		foreach ($jsonIterator as $key => $val) {
-		    if(is_array($val)) {
-		        echo "</li><li class='blag-body-admin'>
-		        	  <h4>
-		        	    $key 
-		        	  	<form action='' method='post' name='delete' id='delete'>
-
-						<span style='font-size: 10px !important'>Enter the post name to delete.</span> <input name='title' id='title' type='text'>
-
-						<button type='submit' name='submit' class='btn-delete fa fa-times-circle' style='float: right; font-size: 20px'></button>
-						</form>
-		        	  
-		        	  </h4><br>";
-		    } else {
-		        //echo "$val<br>";
-		    }
-		}
-			echo '</ul>';
-
 		if(isset($_POST["delete"])) {
 
 			echo "</li><li class='blag-body-admin'>" . $title or exit ("FAIL");
@@ -115,11 +95,17 @@ if(!isset($_SESSION['user'])) {
 		*/
 
 		if(isset($_POST['savesettings'])) {
+
+			if(!isset($_POST['usetinymce'])) {
+				$_POST['usetinymce'] = false;
+			}
+
 			$settings = '<?php
 			$theme = "' . $_POST['theme'] . '";
 			$title = "' . $_POST['sitename'] . '";
 			$greeting = "' . $_POST['sitegreeting'] . '";
 			$greetingContent = "' . $_POST['sitegreeting-content'] . '";
+			$usetinymce = "' . $_POST['usetinymce'] . '";
 			?>';
 
 			$fp = fopen("includes/config.php", "w");
@@ -137,6 +123,7 @@ if(!isset($_SESSION['user'])) {
 
 <div class="main-container-admin">
 	<form action="" method="post" name="savesettings" id="savesettings">
+<!-- Site greeting, name and stuff like that -->
 		<div class="admin-control admin-control-style">
 		<div class="ac-title">Titles:</div>
 
@@ -153,9 +140,9 @@ if(!isset($_SESSION['user'])) {
 		<textarea style="width: 95%" class="acc-content" name="sitegreeting-content" id="sitegreeting-content" type="text"><?php echo $greetingContent; ?></textarea>
 
 		</div>
-		<div class="admin-control admin-control-settings">
+		<div class="admin-control admin-control-settings-color">
 		<div class="ac-title">Color settings:</div>
-
+<!-- Stylesheet settings -->
 		<ul style="margin-left: -25px;">
 		<li><input class="acc-radio" type="radio" name="theme" value="light" size="17" <?php echo ($theme=='light')?'checked':'' ?>><span class="acc-content">Light stylesheet</span>
 		<li><input class="acc-radio" type="radio" name="theme" value="gray" size="17" <?php echo ($theme=='gray')?'checked':'' ?>><span class="acc-content">Gray stylesheet</span>
@@ -164,10 +151,20 @@ if(!isset($_SESSION['user'])) {
 		</ul>
 
 		</div>
+
+		<div class="admin-control admin-control-settings-includes">
+		<div class="ac-title">Main settings:</div>
+<!-- Main site settings -->
+		<ul style="margin-left: -25px;">
+		<li><input class="acc-checkbox" type="checkbox" name="usetinymce" value="true" size="17" <?php echo ($usetinymce==true)?'checked':'' ?>><span class="acc-content">Use TinyMCE for edit page?</span>
+		</ul>
+
+		</div>
+<!-- Site reset -->
 		<div class="admin-control admin-control-reset">
 		<div class="ac-title">Site Reset</div>
 		</div>
-
+<!-- Save settings -->
 		<div class="admin-control admin-control-save">
 		<div class="ac-title">Save settings</div>
 		<button type="submit" name="savesettings" class="btn btn-submit">Save settings</button>
@@ -182,7 +179,7 @@ if(!isset($_SESSION['user'])) {
 		<?php
 	} else { 
 		//If user is not logged in and is not admin
-		header('Location: index.php');
+		header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 		die();
 
 	}

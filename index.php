@@ -119,7 +119,19 @@ if(!isset($_SESSION['user'])) {
 	    new RecursiveArrayIterator(json_decode($json, TRUE)),
 	    RecursiveIteratorIterator::SELF_FIRST);
 
+	    if (!isset($_GET['p'])) {
+	    	$pageiterator = 0;
+	    	$pagenumber = 1;
+	    }
+
+		if (isset($_GET['p'])) {
+			$pagenumber = (int)$_GET['p'];
+			$pageiterator = (int)$_GET['p'];
+		}
+
 		foreach ($jsonIterator as $key => $val) {
+
+			//if ($pageiterator > $pagenumber + (4) && $pageiterator < $pagenumber + (10 * 4)) {
 			
 			    if(is_array($val)) {
 			        /*echo "</div><div class='blag-body'>
@@ -135,6 +147,11 @@ if(!isset($_SESSION['user'])) {
 			       		echo "<span class='timestamp'>$val</span><br></div>";
 			    	}
 			    }
+			//}
+
+			//$pageiterator++;
+			//echo $pageiterator; //why is this all weird
+
 		}
 
 	?>

@@ -62,9 +62,9 @@ if(!isset($_SESSION['user'])) {
 				//$content_2 = "JSON file edit test";
 
 				if ($title == '') {
-					echo "<script type='text/javascript'>displayLoginError('error', 'Missing title.')</script>";
+					echo "<script type='text/javascript'>displayLoginError('error', 'Missing title')</script>";
 				} else if ($content_1 == '') {
-					echo "<script type='text/javascript'>displayLoginError('error', 'Missing content.')</script>";
+					echo "<script type='text/javascript'>displayLoginError('error', 'Missing content')</script>";
 				} else {
 				
 				$file = "pages/posts.json";
@@ -78,6 +78,8 @@ if(!isset($_SESSION['user'])) {
 				//echo json_encode($json);
 
 				file_put_contents($file, json_encode($json));
+
+				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 
 				}
 			} ?>
@@ -117,10 +119,31 @@ if(!isset($_SESSION['user'])) {
 		<input type="hidden" value="logout">
 	</form>
 
+	<?php
+
+	require ('/includes/config.php');
+
+	if ($usetinymce) { ?>
+	<!-- <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script> -->
+	<script type="text/javascript" src="<?php echo dirname($_SERVER['REQUEST_URI']); ?>/includes/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript">
+	        tinymce.init({
+	        	selector:'textarea#content',
+	        	plugins: [
+	        		"autolink lists link image preview anchor",
+	        		"searchreplace code fullscreen",
+	        		"media table paste contextmenu"
+	        	],
+	        	toolbar: "undo redo | cold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+	        });
+	</script>
+	<?php } ?>
+
 			<?php
 
 		} else {
-			header('Location: index.php');
+			//return to index page if user not logged in
+			header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 			die();
 		} 
 
