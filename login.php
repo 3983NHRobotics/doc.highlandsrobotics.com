@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 session_start();
 
@@ -14,6 +13,7 @@ if(!isset($_SESSION['user'])) {
 
 ?>
 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Blag Test</title>

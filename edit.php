@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 session_start();
 
@@ -10,6 +9,7 @@ if(!isset($_SESSION['user'])) {
 }
 
 ?>
+<!DOCTYPE html>
 
 <html lang="en">
   <head>
@@ -62,16 +62,20 @@ if(!isset($_SESSION['user'])) {
 				//$content_2 = "JSON file edit test";
 
 				if ($title == '') {
-					echo "Missing title.";
+					echo "<script type='text/javascript'>displayLoginError('error', 'Missing title.')</script>";
 				} else if ($content_1 == '') {
-					echo "Missing content.";
+					echo "<script type='text/javascript'>displayLoginError('error', 'Missing content.')</script>";
 				} else {
 				
 				$file = "pages/posts.json";
 
 				$json = json_decode(file_get_contents($file), true) or exit ("FAILED");
-				$json[$title] = array("content" => $content_1, "date" => $postdate);
-				//array_unshift($json[$title], $json)
+				//$arrayToAdd[$title] = array("content" => $content_1, "date" => $postdate);
+				$arrayToAdd = array("title" => $title, "content" => $content_1, "date" => $postdate);
+				array_unshift($json, $arrayToAdd);
+				//array_merge($arrayToAdd[$title], $json);
+				//$json = $arrayToAdd[$title] + $json;
+				//echo json_encode($json);
 
 				file_put_contents($file, json_encode($json));
 

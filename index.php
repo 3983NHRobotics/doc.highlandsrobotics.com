@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include('includes/config.php');
@@ -11,6 +10,7 @@ if(!isset($_SESSION['user'])) {
 }
 ?>
 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Blag Test</title>
@@ -108,7 +108,6 @@ if(!isset($_SESSION['user'])) {
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
 		//display the greeting post
-
 		echo '<div class="blag-body">
 				<h2> '. $greeting .'</h2>
 				<h4>' . $greetingContent . '</h4>
@@ -123,11 +122,17 @@ if(!isset($_SESSION['user'])) {
 		foreach ($jsonIterator as $key => $val) {
 			
 			    if(is_array($val)) {
-			        echo "</div><div class='blag-body'>
-			        	  <h3>$key</h3><br>";
+			        /*echo "</div><div class='blag-body'>
+			        	  <h3>$key</h3><br>";*/
 			    } else {
-			    	if ($val != 'date') {
-			       		echo "$val<br>";
+			    	if ($key == 'title') {
+			    		echo "<div class='blag-body'><h3>$val</h3>";
+			    	}
+			    	if ($key == 'content') {
+			    		echo "<p>$val</p>";
+			    	}
+			    	if ($key == 'date') {
+			       		echo "<span class='timestamp'>$val</span><br></div>";
 			    	}
 			    }
 		}

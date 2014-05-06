@@ -2,5 +2,5 @@
 			$theme = "dark";
 			$title = "The Blag";
 			$greeting = "Hello world!";
-			$greetingContent = "This is the Blag. This box's content is now easily editable!";
+			$greetingContent = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 3 days!";
 			?>

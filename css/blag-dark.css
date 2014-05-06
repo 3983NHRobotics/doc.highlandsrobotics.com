@@ -252,6 +252,10 @@ hr {
 	margin: 0px auto 0px auto;
 }
 
+.timestamp {
+	font-size: 11px;
+}
+
 .admin-control {
 	padding: 0px 5px 13px 5px;
 	width: 33.3333333333333333333333333%;
