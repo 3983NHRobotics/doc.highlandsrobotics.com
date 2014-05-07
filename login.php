@@ -19,15 +19,13 @@ if(!isset($_SESSION['user'])) {
     <title>Blag Test</title>
     <?php
     	include('/includes/paths.php');
+    	require ('/includes/config.php');
 
-    	if ($_SESSION['theme'] == 'light') {
-    		echo '<link rel="stylesheet" href="css/blag-light.css">';
-    	} else if ($_SESSION['theme'] == 'gray') {
-    		echo '<link rel="stylesheet" href="css/blag-med.css">';
-    	} else if ($_SESSION['theme'] == 'dark') {
-    		echo '<link rel="stylesheet" href="css/blag-dark.css">';
-    	} else { //load custom stylesheet
-    		echo '<link rel="stylesheet" href="css/blag-custom.css">';
+    	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
+    	
+    	if ($usepace === 'true') {
+    		echo '<link rel="stylesheet" href="css/pace/pace-centerbar.css">';
+    		echo '<script src="js/pace/pace.min.js"></script>';
     	}
     ?>
         <meta charset="utf-8">

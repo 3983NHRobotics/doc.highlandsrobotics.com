@@ -16,15 +16,13 @@ if(!isset($_SESSION['user'])) {
     <title>Blag Test - Edit</title>
         <?php
     	include('/includes/paths.php');
+    	require ('/includes/config.php');
 
-    	if ($_SESSION['theme'] == 'light') {
-    		echo '<link rel="stylesheet" href="css/blag-light.css">';
-    	} else if ($_SESSION['theme'] == 'gray') {
-    		echo '<link rel="stylesheet" href="css/blag-med.css">';
-    	} else if ($_SESSION['theme'] == 'dark') {
-    		echo '<link rel="stylesheet" href="css/blag-dark.css">';
-    	} else { //load custom stylesheet
-    		echo '<link rel="stylesheet" href="css/blag-custom.css">';
+    	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
+    	
+    	if ($usepace === 'true') {
+    		echo '<link rel="stylesheet" href="css/pace/pace-centerbar.css">';
+    		echo '<script src="js/pace/pace.min.js"></script>';
     	}
     ?>
         <meta charset="utf-8">
@@ -121,20 +119,18 @@ if(!isset($_SESSION['user'])) {
 
 	<?php
 
-	require ('/includes/config.php');
-
-	if ($usetinymce) { ?>
+	if ($usetinymce === 'true') { ?>
 	<!-- <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script> -->
 	<script type="text/javascript" src="<?php echo dirname($_SERVER['REQUEST_URI']); ?>/includes/tinymce/tinymce.min.js"></script>
 	<script type="text/javascript">
 	        tinymce.init({
 	        	selector:'textarea#content',
 	        	plugins: [
-	        		"autolink lists link image preview anchor",
+	        		"autolink lists link image preview",
 	        		"searchreplace code fullscreen",
 	        		"media table paste contextmenu"
 	        	],
-	        	toolbar: "undo redo | cold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+	        	toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 	        });
 	</script>
 	<?php } ?>

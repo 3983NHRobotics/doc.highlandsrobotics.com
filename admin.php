@@ -16,15 +16,13 @@ if(!isset($_SESSION['user'])) {
 
         <?php
     	include('/includes/paths.php');
+    	require ('/includes/config.php');
 
-    	if ($_SESSION['theme'] == 'light') {
-    		echo '<link rel="stylesheet" href="css/blag-light.css">';
-    	} else if ($_SESSION['theme'] == 'gray') {
-    		echo '<link rel="stylesheet" href="css/blag-med.css">';
-    	} else if ($_SESSION['theme'] == 'dark') {
-    		echo '<link rel="stylesheet" href="css/blag-dark.css">';
-    	} else { //load custom stylesheet
-    		echo '<link rel="stylesheet" href="css/blag-custom.css">';
+    	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
+    	
+    	if ($usepace === 'true') {
+    		echo '<link rel="stylesheet" href="css/pace/pace-centerbar.css">';
+    		echo '<script src="js/pace/pace.min.js"></script>';
     	}
     ?>
         <meta charset="utf-8">
@@ -99,6 +97,9 @@ if(!isset($_SESSION['user'])) {
 			if(!isset($_POST['usetinymce'])) {
 				$_POST['usetinymce'] = false;
 			}
+			if(!isset($_POST['usepace'])) {
+				$_POST['usepace'] = false;
+			}
 
 			$settings = '<?php
 			$theme = "' . $_POST['theme'] . '";
@@ -106,6 +107,7 @@ if(!isset($_SESSION['user'])) {
 			$greeting = "' . $_POST['sitegreeting'] . '";
 			$greetingContent = "' . $_POST['sitegreeting-content'] . '";
 			$usetinymce = "' . $_POST['usetinymce'] . '";
+			$usepace = "' . $_POST['usepace'] . '";
 			?>';
 
 			$fp = fopen("includes/config.php", "w");
@@ -157,6 +159,7 @@ if(!isset($_SESSION['user'])) {
 <!-- Main site settings -->
 		<ul style="margin-left: -25px;">
 		<li><input class="acc-checkbox" type="checkbox" name="usetinymce" value="true" size="17" <?php echo ($usetinymce==true)?'checked':'' ?>><span class="acc-content">Use TinyMCE for edit page?</span>
+		<li><input class="acc-checkbox" type="checkbox" name="usepace" value="true" size="17" <?php echo ($usepace==true)?'checked':'' ?>><span class="acc-content">Use PACE for pageload animations?</span>
 		</ul>
 
 		</div>
@@ -167,7 +170,7 @@ if(!isset($_SESSION['user'])) {
 <!-- Save settings -->
 		<div class="admin-control admin-control-save">
 		<div class="ac-title">Save settings</div>
-		<button type="submit" name="savesettings" class="btn btn-submit">Save settings</button>
+		<button type="submit" name="savesettings" class="btn btn-submit" style="margin-left: 10px">Save</button>
 		</div>
 	</form>
 </div>
