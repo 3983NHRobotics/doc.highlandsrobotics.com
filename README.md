@@ -1,6 +1,8 @@
 Blag
 ====
 
+![Blag login page] (http://i.imgur.com/5Ha1Omg.png)
+
 Blag is a lightweight blog inspired by that _XKCD_ comic.<br>
 Made entirely for fun, this is one of the most interesting projects i've worked on.<br>
 And so its development shall continue.<br>
