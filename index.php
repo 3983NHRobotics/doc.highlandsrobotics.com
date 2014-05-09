@@ -107,8 +107,8 @@ if(!isset($_SESSION['user'])) {
 
 		//display the greeting post
 		echo '<div class="blag-body">
-				<h2> '. $greeting .'</h2>
-				<h4>' . $greetingContent . '</h4>
+				<h2 style="text-align:center"> '. $greeting .'</h2>
+				<h4 style="text-align:center">' . $greetingContent . '</h4>
 			  </div>';
 
 		$json = file_get_contents("pages/posts.json");
@@ -118,18 +118,18 @@ if(!isset($_SESSION['user'])) {
 	    RecursiveIteratorIterator::SELF_FIRST);
 
 	    if (!isset($_GET['p'])) {
-	    	$pageiterator = 0;
+	    	$pageiterator = 1;
 	    	$pagenumber = 1;
 	    }
 
 		if (isset($_GET['p'])) {
-			$pagenumber = (int)$_GET['p'];
 			$pageiterator = (int)$_GET['p'];
+			$pagenumber = (int)$_GET['p'];
 		}
 
 		foreach ($jsonIterator as $key => $val) {
 
-			//if ($pageiterator > $pagenumber + (4) && $pageiterator < $pagenumber + (10 * 4)) {
+			//if ($pageiterator > $pagenumber && $pageiterator < $pagenumber + 10) {
 			
 			    if(is_array($val)) {
 			        /*echo "</div><div class='blag-body'>
@@ -142,14 +142,34 @@ if(!isset($_SESSION['user'])) {
 			    		echo "<p>$val</p>";
 			    	}
 			    	if ($key == 'date') {
+						//echo $pageiterator . ' <br>'; //why is this all weird
+						$pageiterator++;
+						//echo $pagenumber . '<br>';
 			       		echo "<span class='timestamp'>$val</span><br></div>";
 			    	}
 			    }
+
+			//} else if ($pageiterator < $pagenumber || $pageiterator > $pagenumber + 10) {
+			//} else {
+
+				if(is_array($val)) {
+			        /*echo "</div><div class='blag-body'>
+			        	  <h3>$key</h3><br>";*/
+			    } else {
+			    	if ($key == 'title') {
+			    		//echo "<div class='blag-body'><h3>$val</h3>";
+			    	}
+			    	if ($key == 'content') {
+			    		//echo "<p>$val</p>";
+			    	}
+			    	if ($key == 'date') {
+						echo $pageiterator . ' <br>'; //why is this all weird
+						$pageiterator++;
+						echo $pagenumber . '<br>';
+			       		//echo "<span class='timestamp'>$val</span><br></div>";
+			    	}
+			    }
 			//}
-
-			//$pageiterator++;
-			//echo $pageiterator; //why is this all weird
-
 		}
 
 	?>

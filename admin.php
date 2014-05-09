@@ -66,7 +66,7 @@ if(!isset($_SESSION['user'])) {
 
 	if ($_SESSION['mode'] === 'admin') {
 
-		/*
+		
 		$file = 'pages/posts.json';
 
 		$json = file_get_contents($file);
@@ -75,22 +75,70 @@ if(!isset($_SESSION['user'])) {
 	    new RecursiveArrayIterator(json_decode($json, TRUE)),
 	    RecursiveIteratorIterator::SELF_FIRST);
 
+	    if (!isset($_GET['p'])) {
+	    	$pageiterator = 0;
+	    	$pagenumber = 1;
+	    }
+
+		if (isset($_GET['p'])) {
+			$pagenumber = (int)$_GET['p'];
+			$pageiterator = (int)$_GET['p'];
+		}
+
+		echo '<div class="posts-container-admin">';
+
+		foreach ($jsonIterator as $key => $val) {
+
+			//if ($pageiterator > $pagenumber && $pageiterator < $pagenumber) {
+			
+			    if(is_array($val)) {
+			        /*echo "</div><div class='blag-body'>
+			        	  <h3>$key</h3><br>";*/
+			    } else {
+			    	if ($key == 'title') {
+			    		echo "<div class='blag-body-admin'><span style='width:70%;'>$val</span>  
+			    			  <form type='hidden' action='' method='post' name='delete' id='delete'>
+							  <input type='text' name='title' value='$val'>
+							  <button type='submit' name='delete' class='btn-delete'><i class='fa fa-times-circle-o'></i></button>
+							  </form>
+							  </div>";
+			    	}
+			    	if ($key == 'content') {
+			    		$pageiterator++;
+			    	}
+			    	if ($key == 'date') {
+			       		//echo "<span class='timestamp'>$val</span><br></div>";
+						echo $pageiterator; //why is this all weird
+			    	}
+			    }
+			//}
+
+		}
+
+		echo '</div>';
+
 		if(isset($_POST["delete"])) {
 
-			echo "</li><li class='blag-body-admin'>" . $title or exit ("FAIL");
+			//echo "</li><li class='blag-body-admin'>" . $title or exit ("FAIL");
 			$title = $_POST['title'];
 			$array = json_decode($json, TRUE);
 
 			foreach ($array as $key => $val) {
-			    if ($key == $title) {
-			        unset($array[$key]);
-			    }
+				if ($key == 'title') {
+				    if ($val == $title) {
+				        unset($array[$key]);
+				    }
+				}
 			}
+
+			/*$fs = fopen($file, "w");
+        	fwrite($fs, json_encode($array));
+        	fclose($fs);*/
 
 			file_put_contents($file, json_encode($array));
 
 		} 
-		*/
+		
 
 		if(isset($_POST['savesettings'])) {
 

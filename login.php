@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include('includes/config.php');
+require('includes/config.php');
 
 $_SESSION['theme'] = $theme;
 //if (!isset($_SESSION['mode'])) {

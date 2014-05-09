@@ -69,7 +69,7 @@ if(!isset($_SESSION['user'])) {
 
 				$json = json_decode(file_get_contents($file), true) or exit ("FAILED");
 				//$arrayToAdd[$title] = array("content" => $content_1, "date" => $postdate);
-				$arrayToAdd = array("title" => $title, "content" => $content_1, "date" => $postdate);
+				$arrayToAdd[$title] = array("title" => $title, "content" => $content_1, "date" => $postdate);
 				array_unshift($json, $arrayToAdd);
 				//array_merge($arrayToAdd[$title], $json);
 				//$json = $arrayToAdd[$title] + $json;
