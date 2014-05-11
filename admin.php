@@ -38,7 +38,6 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
-    <script src="js/blag_parser.js"></script>
 
     <?php
     	include_once('/includes/paths.php');
@@ -143,10 +142,10 @@ if(!isset($_SESSION['user'])) {
 		if(isset($_POST['savesettings'])) {
 
 			if(!isset($_POST['usetinymce'])) {
-				$_POST['usetinymce'] = false;
+				$_POST['usetinymce'] = 'false';
 			}
 			if(!isset($_POST['usepace'])) {
-				$_POST['usepace'] = false;
+				$_POST['usepace'] = 'false';
 			}
 
 			$settings = '<?php
@@ -206,8 +205,8 @@ if(!isset($_SESSION['user'])) {
 		<div class="ac-title">Main settings:</div>
 <!-- Main site settings -->
 		<ul style="margin-left: -25px;">
-		<li><input class="acc-checkbox" type="checkbox" name="usetinymce" value="true" size="17" <?php echo ($usetinymce==true)?'checked':'' ?>><span class="acc-content">Use TinyMCE for edit page?</span>
-		<li><input class="acc-checkbox" type="checkbox" name="usepace" value="true" size="17" <?php echo ($usepace==true)?'checked':'' ?>><span class="acc-content">Use PACE for pageload animations?</span>
+		<li><input class="acc-checkbox" type="checkbox" name="usetinymce" value="true" size="17" <?php echo ($usetinymce=='true')?'checked':'' ?>><span class="acc-content">Use TinyMCE for edit page?</span>
+		<li><input class="acc-checkbox" type="checkbox" name="usepace" value="true" size="17" <?php echo ($usepace=='true')?'checked':'' ?>><span class="acc-content">Use PACE for pageload animations?</span>
 		</ul>
 
 		</div>

@@ -38,7 +38,6 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
-    <script src="js/blag_parser.js"></script>
   </head>
 <body>
 
@@ -47,9 +46,6 @@ if(!isset($_SESSION['user'])) {
 	</div>
 
 	<?php
-		
-		require('includes/user.php');
-
 		function checkMode($type) {
 
 			global $unamesub;
@@ -92,87 +88,59 @@ if(!isset($_SESSION['user'])) {
 			} else {
 				//echo 'fail ';
 			}
-
-			if ($type == 'login') {
-				//echo 'type = login<br> ';
-			} else if ($type == 'init') {
-				//echo 'type = init<br> ';
-			} else {
-
-			}
 		}
+
+		require('includes/user.php');
+
+		$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+        if (mysqli_connect_errno()) {
+	        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+        } else {
 
 		checkMode('init');
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
+		if (!empty($_GET['p'])) {
+			$pagenumber = $_GET['p'];
+		} else {
+			$_GET['p'] = '1';
+			$pagenumber = '1';
+		}
 		//display the greeting post
-		echo '<div class="blag-body">
-				<h2 style="text-align:center"> '. $greeting .'</h2>
-				<h4 style="text-align:center">' . $greetingContent . '</h4>
-			  </div>';
-
-		$json = file_get_contents("pages/posts.json");
-
-		$jsonIterator = new RecursiveIteratorIterator(
-	    new RecursiveArrayIterator(json_decode($json, TRUE)),
-	    RecursiveIteratorIterator::SELF_FIRST);
-
-	    if (!isset($_GET['p'])) {
-	    	$pageiterator = 1;
-	    	$pagenumber = 1;
-	    }
-
-		if (isset($_GET['p'])) {
-			$pageiterator = (int)$_GET['p'];
-			$pagenumber = (int)$_GET['p'];
+		if ($_GET['p'] == '1') {
+			echo '<div class="blag-body">
+					<h2 style="text-align:center"> '. $greeting .'</h2>
+					<h4 style="text-align:center">' . $greetingContent . '</h4>
+				  </div>';
 		}
 
-		foreach ($jsonIterator as $key => $val) {
+		$start_page = ($pagenumber - 1) * 10;
+		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,10"); //This works!
 
-			//if ($pageiterator > $pagenumber && $pageiterator < $pagenumber + 10) {
-			
-			    if(is_array($val)) {
-			        /*echo "</div><div class='blag-body'>
-			        	  <h3>$key</h3><br>";*/
-			    } else {
-			    	if ($key == 'title') {
-			    		echo "<div class='blag-body'><h3>$val</h3>";
-			    	}
-			    	if ($key == 'content') {
-			    		echo "<p>$val</p>";
-			    	}
-			    	if ($key == 'date') {
-						//echo $pageiterator . ' <br>'; //why is this all weird
-						$pageiterator++;
-						//echo $pagenumber . '<br>';
-			       		echo "<span class='timestamp'>$val</span><br></div>";
-			    	}
-			    }
-
-			//} else if ($pageiterator < $pagenumber || $pageiterator > $pagenumber + 10) {
-			//} else {
-
-				if(is_array($val)) {
-			        /*echo "</div><div class='blag-body'>
-			        	  <h3>$key</h3><br>";*/
-			    } else {
-			    	if ($key == 'title') {
-			    		//echo "<div class='blag-body'><h3>$val</h3>";
-			    	}
-			    	if ($key == 'content') {
-			    		//echo "<p>$val</p>";
-			    	}
-			    	if ($key == 'date') {
-						echo $pageiterator . ' <br>'; //why is this all weird
-						$pageiterator++;
-						echo $pagenumber . '<br>';
-			       		//echo "<span class='timestamp'>$val</span><br></div>";
-			    	}
-			    }
-			//}
+		while($row = mysqli_fetch_array($body)) {
+		    echo '<div class="blag-body">
+				<h3>' . $row['title'] . '</h3>
+				<p>' . $row['content'] . '</p>
+				<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
+				<br><span class="timestamp">PID: '. $row['PID'] .'</span>
+			  	</div>';
 		}
 
+		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Posts");
+		$row = mysqli_fetch_row($pages);
+		$total_things = $row[0];
+		$total_pages = ceil($total_things / 10); //gets the number of pages for pagination
+	}
 	?>
+
+	<div class="pagination">
+		<?php
+			for ($i = 1; $i <= $total_pages; $i++) { 
+            	echo "<a href='" . dirname($_SERVER['SCRIPT_NAME']) . "/?p=" . $i . "'>" . $i . "</a> "; 
+			}
+		?>
+	</div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -204,11 +172,6 @@ if(!isset($_SESSION['user'])) {
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">
 	</form>
-
- <!--    This thing is to make the ugly stuff into pretty stuff -->
-    <script>//parseBlag();</script>
-    <!-- Markdown parsy thing -->
-    <!--<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>-->
 
 	<!--<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

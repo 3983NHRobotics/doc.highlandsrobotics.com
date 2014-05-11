@@ -14,7 +14,6 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/blag.js"></script>
-    <script src="../js/blag_parser.js"></script>
 
   </head>
 <body>
@@ -29,9 +28,17 @@ if (isset($_POST["Submit"])) {
 
 $string = '<?php 
 
-$uname = "' . sha1($_POST["uname"]) . '";
+//$uname = "' . sha1($_POST["uname"]) . '";
 
-$upass = "' . sha1(md5(md5($_POST["upass"]))) . '";
+//$upass = "' . sha1(md5(md5($_POST["upass"]))) . '";
+
+$dbuname = "' . $_POST['dbuname'] . '";
+
+$dbupass = "' . $_POST['dbupass'] . '";
+
+$dbhost = "' . $_POST['dbhost'] . '";
+
+$dbname = "' . $_POST['dbname'] . '";
 
 $installed = true;
 
@@ -45,9 +52,77 @@ $installed = true;
 
         fclose($fp);
 
+        $db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+        if (mysqli_connect_errno()) {
+        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+        } else {
+            //Create MySQL table for users
+            $sql = 'CREATE TABLE Users(
+                PID INT NOT NULL AUTO_INCREMENT, 
+                PRIMARY KEY(PID),
+                name CHAR(20), 
+                pass CHAR(30), 
+                age INT)';
+            $age = mysqli_real_escape_string($db, $_POST['uage']);
+            $uname = sha1($_POST['uname']);
+            $upass = sha1(md5(sha1($_POST['upass'])));
+
+            // Execute query
+            if (mysqli_query($db,$sql)) {
+              echo "Table Users created successfully";
+            } else {
+              echo "Error creating table: " . mysqli_error($db);
+            }
+
+            $sql = "INSERT INTO Users (name, pass, age)
+                    VALUES ('$uname', 
+                    '$upass', 
+                    '$age')";
+
+            if (!mysqli_query($db,$sql)) {
+                die('Error: ' . mysqli_error($db));
+            }
+
+            //Create MySQL table for posts
+            $sql = 'CREATE TABLE Posts(
+                PID INT NOT NULL AUTO_INCREMENT, 
+                PRIMARY KEY(PID),
+                title CHAR(50), 
+                content TEXT(500),
+                creator CHAR(20),
+                timestamp CHAR(30))';
+            $firstpost_title = 'Welcome to Blag';
+            $firstpost_content = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 3 days!";
+            $firstpost_creator = 'blag';
+            $firstpost_timestamp = 'TIME OF CREATION';
+
+            // Execute query
+            if (mysqli_query($db,$sql)) {
+              echo "Table Posts created successfully";
+            } else {
+              echo "Error creating table: " . mysqli_error($db);
+            }
+
+            $sql = "INSERT INTO Posts (title, content, creator, timestamp)
+                    VALUES ('$firstpost_title', 
+                    '$firstpost_content', 
+                    '$firstpost_creator',
+                    '$firstpost_timestamp')";
+
+            if (!mysqli_query($db,$sql)) {
+                die('Error: ' . mysqli_error($db));
+            }
+
+
+        } 
+
     } else {
         echo "<script type='text/javascript'>displayLoginError('error', 'Blag is already installed')</script>";
     }
+
+    
+
 }
 
 ?>
@@ -61,6 +136,23 @@ $installed = true;
     <p>
       <label class="loginpage-content-title"><i class="fa fa-lock"></i>Set a password.</label>
       <input class="loginpage-content" name="upass" type="password" id="upass"> 
+  </p>
+      <input type="hidden" value="0" name="uage">
+  <p>
+      <label class="loginpage-content-title"><i class="fa fa-cog"></i> Enter database username.</label>
+      <input class="loginpage-content" name="dbuname" type="text" id="dbuname" value=""> 
+  </p>
+    <p>
+      <label class="loginpage-content-title"><i class="fa fa-cog"></i> Enter database password.</label>
+      <input class="loginpage-content" name="dbupass" type="password" id="dbupass"> 
+  </p>
+  <p>
+      <label class="loginpage-content-title"><i class="fa fa-cog"></i> Enter database host url.</label>
+      <input class="loginpage-content" name="dbhost" type="text" id="dbhost" value=""> 
+  </p>
+    <p>
+      <label class="loginpage-content-title"><i class="fa fa-cog"></i> Enter database name.</label>
+      <input class="loginpage-content" name="dbname" type="text" id="dbname"> 
   </p>
     <p>
       <button class="btn btn-submit" type="submit" name="Submit" value="Install">Install</button>

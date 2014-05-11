@@ -38,7 +38,6 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
-    <script src="js/blag_parser.js"></script>
 
     <?php
     	include_once('/includes/paths.php');
@@ -56,7 +55,7 @@ if(!isset($_SESSION['user'])) {
 				$title = $_POST["title"];
 				$content_1 = $_POST["content"];
 				//$type = $_POST["posttype"];
-				$postdate = date("m/d/Y") . ' at ' . date('h:i:s a');
+				$postdate = 'Posted by ' . $_SESSION['username'] . ' - ' . date("m/d/Y") . ' at ' . date('h:i:s a');
 				//$content_2 = "JSON file edit test";
 
 				if ($title == '') {
