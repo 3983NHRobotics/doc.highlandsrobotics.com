@@ -15,7 +15,6 @@ if(!isset($_SESSION['user'])) {
   <head>
     <title>Blag Test</title>
     <?php
-    	include('/includes/paths.php');
     	require ('/includes/config.php');
 
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';

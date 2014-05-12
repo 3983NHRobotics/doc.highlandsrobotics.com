@@ -114,37 +114,35 @@ if(!isset($_SESSION['user'])) {
 			} else {
 				//echo 'fail ';
 			}
-
-			if ($type == 'login') {
-				//echo 'type = login<br> ';
-			} else if ($type == 'init') {
-				//echo 'type = init<br> ';
-			} else {
-				//echo 'type = logout<br>';
-			}
 		}
 
 		checkMode('init');
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
+		$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+        if (mysqli_connect_errno()) {
+        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+        }
+
 		if(isset($_POST['Login'])) {
 			$unamesub = sha1($_POST['unamesub']);
-			$upassSHA = sha1(md5(md5($_POST['upasssub'])));
+			$upassSHA = sha1(md5(sha1($_POST['upasssub'])));
+			echo $unamesub . '<br>';
+			echo $upassSHA;
 
-			if ($unamesub === $uname) {
-				if ($upassSHA === $upass) {
-					//echo 'success';
-					$_SESSION['mode'] = 'admin';
-					$_SESSION['user'] = $unamesub;
-					$_SESSION['username'] = $_POST['unamesub'];
-					checkMode('login');
-					header('Location: ' . dirname($_SERVER['REQUEST_URI']));
-					die();
-				} else {
-					echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
-				}
+			$user = mysqli_query($db,"SELECT * FROM Users WHERE name='$unamesub'");
+			$row = mysqli_fetch_array($user);
+			if ($upassSHA === $row['pass']) {
+			 	$_SESSION['mode'] = 'admin';
+				$_SESSION['user'] = $unamesub;
+				$_SESSION['username'] = $_POST['unamesub'];
+				checkMode('login');
+				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				echo 'bla';
+				die();
 			} else {
-				echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect username')</script>";
+			   	echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
 			}
 		}
 

@@ -15,7 +15,6 @@ if(!isset($_SESSION['user'])) {
     <title>Blag Test - Admin</title>
 
         <?php
-    	include('/includes/paths.php');
     	require ('/includes/config.php');
 
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
@@ -86,13 +85,11 @@ if(!isset($_SESSION['user'])) {
 
 		echo '<div class="posts-container-admin">';
 
-		foreach ($jsonIterator as $key => $val) {
+		/*foreach ($jsonIterator as $key => $val) {
 
 			//if ($pageiterator > $pagenumber && $pageiterator < $pagenumber) {
 			
 			    if(is_array($val)) {
-			        /*echo "</div><div class='blag-body'>
-			        	  <h3>$key</h3><br>";*/
 			    } else {
 			    	if ($key == 'title') {
 			    		echo "<div class='blag-body-admin'><span style='width:70%;'>$val</span>  
@@ -112,11 +109,11 @@ if(!isset($_SESSION['user'])) {
 			    }
 			//}
 
-		}
+		}*/
 
 		echo '</div>';
 
-		if(isset($_POST["delete"])) {
+		/*if(isset($_POST["delete"])) {
 
 			//echo "</li><li class='blag-body-admin'>" . $title or exit ("FAIL");
 			$title = $_POST['title'];
@@ -130,13 +127,9 @@ if(!isset($_SESSION['user'])) {
 				}
 			}
 
-			/*$fs = fopen($file, "w");
-        	fwrite($fs, json_encode($array));
-        	fclose($fs);*/
-
 			file_put_contents($file, json_encode($array));
 
-		} 
+		}*/ 
 		
 
 		if(isset($_POST['savesettings'])) {

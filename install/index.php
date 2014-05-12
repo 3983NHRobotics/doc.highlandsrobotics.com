@@ -28,10 +28,6 @@ if (isset($_POST["Submit"])) {
 
 $string = '<?php 
 
-//$uname = "' . sha1($_POST["uname"]) . '";
-
-//$upass = "' . sha1(md5(md5($_POST["upass"]))) . '";
-
 $dbuname = "' . $_POST['dbuname'] . '";
 
 $dbupass = "' . $_POST['dbupass'] . '";
@@ -61,9 +57,10 @@ $installed = true;
             $sql = 'CREATE TABLE Users(
                 PID INT NOT NULL AUTO_INCREMENT, 
                 PRIMARY KEY(PID),
-                name CHAR(20), 
-                pass CHAR(30), 
-                age INT)';
+                name CHAR(50), 
+                pass CHAR(50), 
+                email CHAR(50),
+                disname CHAR(20))';
             $age = mysqli_real_escape_string($db, $_POST['uage']);
             $uname = sha1($_POST['uname']);
             $upass = sha1(md5(sha1($_POST['upass'])));
@@ -75,10 +72,9 @@ $installed = true;
               echo "Error creating table: " . mysqli_error($db);
             }
 
-            $sql = "INSERT INTO Users (name, pass, age)
+            $sql = "INSERT INTO Users (name, pass)
                     VALUES ('$uname', 
-                    '$upass', 
-                    '$age')";
+                    '$upass')";
 
             if (!mysqli_query($db,$sql)) {
                 die('Error: ' . mysqli_error($db));
@@ -93,7 +89,7 @@ $installed = true;
                 creator CHAR(20),
                 timestamp CHAR(30))';
             $firstpost_title = 'Welcome to Blag';
-            $firstpost_content = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 3 days!";
+            $firstpost_content = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 4 days!";
             $firstpost_creator = 'blag';
             $firstpost_timestamp = 'TIME OF CREATION';
 

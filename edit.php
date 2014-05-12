@@ -15,8 +15,8 @@ if(!isset($_SESSION['user'])) {
   <head>
     <title>Blag Test - Edit</title>
         <?php
-    	include('/includes/paths.php');
     	require ('/includes/config.php');
+    	require('/includes/user.php');
 
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
@@ -38,10 +38,6 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
-
-    <?php
-    	include_once('/includes/paths.php');
-    ?>
   </head>
 <body>
 
@@ -52,34 +48,47 @@ if(!isset($_SESSION['user'])) {
 	<?php
 		if($_SESSION['mode'] === 'admin') {
 			if(isset($_POST["Submit"])) {
-				$title = $_POST["title"];
-				$content_1 = $_POST["content"];
-				//$type = $_POST["posttype"];
-				$postdate = 'Posted by ' . $_SESSION['username'] . ' - ' . date("m/d/Y") . ' at ' . date('h:i:s a');
-				//$content_2 = "JSON file edit test";
 
-				if ($title == '') {
+				$title = $_POST["title"];
+				$content = $_POST["content"];
+				$creator = $_SESSION['username'];
+				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
+
+				/*if ($title == '') {
 					echo "<script type='text/javascript'>displayLoginError('error', 'Missing title')</script>";
-				} else if ($content_1 == '') {
+				} else if ($content == '') {
 					echo "<script type='text/javascript'>displayLoginError('error', 'Missing content')</script>";
 				} else {
 				
 				$file = "pages/posts.json";
 
 				$json = json_decode(file_get_contents($file), true) or exit ("FAILED");
-				//$arrayToAdd[$title] = array("content" => $content_1, "date" => $postdate);
-				$arrayToAdd[$title] = array("title" => $title, "content" => $content_1, "date" => $postdate);
+				$arrayToAdd[$title] = array("title" => $title, "content" => $content, "date" => $postdate);
 				array_unshift($json, $arrayToAdd);
-				//array_merge($arrayToAdd[$title], $json);
-				//$json = $arrayToAdd[$title] + $json;
-				//echo json_encode($json);
 
-				file_put_contents($file, json_encode($json));
+				file_put_contents($file, json_encode($json));*/
+
+				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+		        if (mysqli_connect_errno()) {
+		        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
+		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+		        }
+
+		        $sql = "INSERT INTO Posts (title, content, creator, timestamp)
+                    VALUES ('$title', 
+                    '$content', 
+                    '$creator',
+                    '$timestamp')";
+
+	            if (!mysqli_query($db,$sql)) {
+	                die('Error: ' . mysqli_error($db));
+	            }
 
 				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 
 				}
-			} ?>
+			
+		?>
 
 <div class="header-admin">
 	<span class="header-content">
@@ -132,9 +141,9 @@ if(!isset($_SESSION['user'])) {
 	        	toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 	        });
 	</script>
-	<?php } ?>
-
-			<?php
+	<?php 
+		
+		} 
 
 		} else {
 			//return to index page if user not logged in
