@@ -12,6 +12,8 @@ Why did I choose to make this?<br>
 Why use something that someone has made when you can use your own?<br>
 (other than the obvious reasons...)
 <br>
+To install, plonk it somewhere and go to /install. Enter all required stuff for the SQL thing.<br>
+Also delete the `$installed = 'true';` from config.php because I need that to test with, and don't feel like removing it every time.<br>
 
 Uses the awesome [TinyMCE](http://www.tinymce.com/ "TinyMCE website") for the edit page if you want it to.<br>
 Also uses [PACE](http://github.hubspot.com/pace/docs/welcome/ "Pace website") for pageload animations if you want.
