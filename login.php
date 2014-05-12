@@ -128,8 +128,6 @@ if(!isset($_SESSION['user'])) {
 		if(isset($_POST['Login'])) {
 			$unamesub = sha1($_POST['unamesub']);
 			$upassSHA = sha1(md5(sha1($_POST['upasssub'])));
-			echo $unamesub . '<br>';
-			echo $upassSHA;
 
 			$user = mysqli_query($db,"SELECT * FROM Users WHERE name='$unamesub'");
 			$row = mysqli_fetch_array($user);

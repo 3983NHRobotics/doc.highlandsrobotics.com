@@ -58,7 +58,6 @@ if(!isset($_SESSION['user'])) {
 	</span>
 </div>	
 
-
 	<?php
 		//Read from the pages file to get contents because an efficient database is too efficient.
 
@@ -68,10 +67,6 @@ if(!isset($_SESSION['user'])) {
 		$file = 'pages/posts.json';
 
 		$json = file_get_contents($file);
-
-		$jsonIterator = new RecursiveIteratorIterator(
-	    new RecursiveArrayIterator(json_decode($json, TRUE)),
-	    RecursiveIteratorIterator::SELF_FIRST);
 
 	    if (!isset($_GET['p'])) {
 	    	$pageiterator = 0;
@@ -84,32 +79,6 @@ if(!isset($_SESSION['user'])) {
 		}
 
 		echo '<div class="posts-container-admin">';
-
-		/*foreach ($jsonIterator as $key => $val) {
-
-			//if ($pageiterator > $pagenumber && $pageiterator < $pagenumber) {
-			
-			    if(is_array($val)) {
-			    } else {
-			    	if ($key == 'title') {
-			    		echo "<div class='blag-body-admin'><span style='width:70%;'>$val</span>  
-			    			  <form type='hidden' action='' method='post' name='delete' id='delete'>
-							  <input type='text' name='title' value='$val'>
-							  <button type='submit' name='delete' class='btn-delete'><i class='fa fa-times-circle-o'></i></button>
-							  </form>
-							  </div>";
-			    	}
-			    	if ($key == 'content') {
-			    		$pageiterator++;
-			    	}
-			    	if ($key == 'date') {
-			       		//echo "<span class='timestamp'>$val</span><br></div>";
-						echo $pageiterator; //why is this all weird
-			    	}
-			    }
-			//}
-
-		}*/
 
 		echo '</div>';
 
@@ -130,7 +99,6 @@ if(!isset($_SESSION['user'])) {
 			file_put_contents($file, json_encode($array));
 
 		}*/ 
-		
 
 		if(isset($_POST['savesettings'])) {
 

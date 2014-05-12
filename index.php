@@ -122,7 +122,6 @@ if(!isset($_SESSION['user'])) {
 				<h3>' . $row['title'] . '</h3>
 				<p>' . $row['content'] . '</p>
 				<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
-				<br><span class="timestamp">PID: '. $row['PID'] .'</span>
 			  	</div>';
 		}
 
@@ -132,13 +131,16 @@ if(!isset($_SESSION['user'])) {
 		$total_pages = ceil($total_things / 10); //gets the number of pages for pagination
 	}
 	?>
-
-	<div class="pagination">
-		<?php
-			for ($i = 1; $i <= $total_pages; $i++) { 
-            	echo "<a href='" . dirname($_SERVER['SCRIPT_NAME']) . "/?p=" . $i . "'>" . $i . "</a> "; 
-			}
-		?>
+	<div class="footer">
+		<!-- &copy; 2014 Theodore Kluge -->
+		<div class="pagn">
+			Pages: 
+			<?php
+				for ($i = 1; $i <= $total_pages; $i++) { 
+	            	echo "<a class='pagnbtn' href='" . dirname($_SERVER['SCRIPT_NAME']) . "/?p=" . $i . "'>" . $i . "</a> "; 
+				}
+			?>
+		</div>
 	</div>
 
 <!-- Modal -->

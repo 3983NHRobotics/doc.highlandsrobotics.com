@@ -3,6 +3,6 @@
 			$title = "The Blag";
 			$greeting = "The Blag";
 			$greetingContent = "Welcome to Blag - the bloggy thing that was written in (currently) 4 days!";
-			$usetinymce = "false";
+			$usetinymce = "true";
 			$usepace = "false";
 			?>

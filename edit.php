@@ -86,7 +86,11 @@ if(!isset($_SESSION['user'])) {
 
 				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 
-				}
+			}
+
+			if(isset($_POST['Edit'])) {
+				
+			}
 			
 		?>
 
