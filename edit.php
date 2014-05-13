@@ -54,20 +54,6 @@ if(!isset($_SESSION['user'])) {
 				$creator = $_SESSION['username'];
 				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
 
-				/*if ($title == '') {
-					echo "<script type='text/javascript'>displayLoginError('error', 'Missing title')</script>";
-				} else if ($content == '') {
-					echo "<script type='text/javascript'>displayLoginError('error', 'Missing content')</script>";
-				} else {
-				
-				$file = "pages/posts.json";
-
-				$json = json_decode(file_get_contents($file), true) or exit ("FAILED");
-				$arrayToAdd[$title] = array("title" => $title, "content" => $content, "date" => $postdate);
-				array_unshift($json, $arrayToAdd);
-
-				file_put_contents($file, json_encode($json));*/
-
 				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
 		        if (mysqli_connect_errno()) {
 		        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -84,12 +70,43 @@ if(!isset($_SESSION['user'])) {
 	                die('Error: ' . mysqli_error($db));
 	            }
 
+	            mysqli_close($db);
+
 				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 
 			}
 
+			if(isset($_POST['Entereditcontent'])) {
+				$postid = $_POST['postid'];
+
+				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+		        if (mysqli_connect_errno()) {
+		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+		        }
+
+		        $body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
+
+		        while($row = mysqli_fetch_array($body)) {
+			    	echo '<div class="blag-body">
+					<h3>' . $row['title'] . '</h3>
+					<p>' . $row['content'] . '</p>
+					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
+				  	</div>';
+
+				  	echo 'javascript to set textarea content goes here. ';
+				}
+
+			}
+
 			if(isset($_POST['Edit'])) {
-				
+				$newtitle = $_POST['title'];
+				$newcontent = $_POST['content'];
+
+		        $sql = "UPDATE Posts SET title $newtitle AND content $newcontent";
+
+		        mysqli_query($db, $sql);
+
+		        mysqli_close($db);
 			}
 			
 		?>
@@ -105,25 +122,36 @@ if(!isset($_SESSION['user'])) {
 </div>			
 
 <div class="blag-body">
+<?php 
 
-		<form action="" method="post" name="submit" id="submit">
+	// if($_SESSION['mode'] === 'admin') {
+		//if(empty($_POST['Submit'])) {
+		if(!isset($_GET['action'])) { ?>
+			<form action="" method="post" name="submit" id="submit">
 
-		<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
+			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
 
-		<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
+			<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
 
-		<!--<p><span>Post type:</span>
-		<select name="posttype">
-		  <option value="posted">Posted</option>
-		  <option value="private">Private</option>
-		  <option value="draft">Draft</option>
-		</select>-->
+			<p><input class="btn btn-submit" type="submit" name="Submit" value="Post">
 
-		<p><input class="btn btn-submit" type="submit" name="Submit" value="Post">
+			</form>
 
-		</form>
+<?php 		} else if ($_GET['action'] === 'edit') { ?>
 
-	</div>
+			<form action="" method="post" name="edit" id="submit">
+
+			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
+
+			<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
+
+			<p><input class="btn btn-submit" type="submit" name="Edit" value="Post">
+
+			</form>
+
+<?php 		} 
+?>
+</div>
 
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">

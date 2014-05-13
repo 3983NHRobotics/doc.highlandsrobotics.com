@@ -307,3 +307,7 @@ hr {
     -ms-transform:rotate(-30deg);
     -webkit-transform:rotate(-30deg);
 }
+
+iframe {
+	border-width: 0px;
+}
