@@ -121,8 +121,15 @@ if(!isset($_SESSION['user'])) {
 		    echo '<div class="blag-body">
 				<h3>' . $row['title'] . '</h3>
 				<p>' . $row['content'] . '</p>
-				<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
-			  	</div>';
+				<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
+			if ($_SESSION['mode'] == 'admin') {
+				echo '<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
+				<input type="hidden" name="postid" value="' . $row["PID"] . '">
+				<input type="submit" value="Edit" name="Entereditcontent">
+				</form>';
+				echo '<div class="editdelete"><a onclick="document.getElementById(editpost' . $row['PID'] . ').submit();">Edit</a> <i class="fa fa-circle-o"></i> <a onclick="">Delete</a></div>';
+			  }
+			echo '</div>';
 		}
 
 		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Posts");

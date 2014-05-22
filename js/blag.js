@@ -20,3 +20,8 @@ displayLoginError = function(type, errormessage) {
 	
 	$("#errordiv").removeClass('alert-success').addClass('alert-error');
 }
+
+updateForm = function(title, content) {
+	$("input#title").val(title);
+	$("textarea#content").html(content);
+}

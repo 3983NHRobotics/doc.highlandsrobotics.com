@@ -306,3 +306,23 @@ hr {
 iframe {
 	border-width: 0px;
 }
+
+.editdelete {
+	font-weight: bold;
+	float: right;
+	color: #000;
+	-webkit-transition: all .2s ease-in-out;
+          transition: all .2s ease-in-out;
+}
+.editdelete:hover {
+	cursor: pointer;
+	color: #c04000;
+}
+.editdelete > a {
+	color: #000;
+	-webkit-transition: all .2s ease-in-out;
+          transition: all .2s ease-in-out;
+}
+.editdelete > a:hover {
+	color: #f00;
+}

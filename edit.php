@@ -47,18 +47,20 @@ if(!isset($_SESSION['user'])) {
 
 	<?php
 		if($_SESSION['mode'] === 'admin') {
-			if(isset($_POST["Submit"])) {
+			$postid = 0;
 
-				$title = $_POST["title"];
-				$content = $_POST["content"];
-				$creator = $_SESSION['username'];
-				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
-
-				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+			$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
 		        if (mysqli_connect_errno()) {
 		        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
 		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
 		        }
+
+			if(isset($_POST["Submit"])) {
+				//Change this so that apostraphes and stuff can be used
+				$title = mysql_real_escape_string($_POST["title"]);
+				$content = mysql_real_escape_string($_POST["content"]);
+				$creator = $_SESSION['username'];
+				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
 
 		        $sql = "INSERT INTO Posts (title, content, creator, timestamp)
                     VALUES ('$title', 
@@ -76,33 +78,11 @@ if(!isset($_SESSION['user'])) {
 
 			}
 
-			if(isset($_POST['Entereditcontent'])) {
-				$postid = $_POST['postid'];
-
-				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
-		        if (mysqli_connect_errno()) {
-		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
-		        }
-
-		        $body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
-
-		        while($row = mysqli_fetch_array($body)) {
-			    	echo '<div class="blag-body">
-					<h3>' . $row['title'] . '</h3>
-					<p>' . $row['content'] . '</p>
-					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
-				  	</div>';
-
-				  	echo 'javascript to set textarea content goes here. ';
-				}
-
-			}
-
 			if(isset($_POST['Edit'])) {
 				$newtitle = $_POST['title'];
 				$newcontent = $_POST['content'];
 
-		        $sql = "UPDATE Posts SET title $newtitle AND content $newcontent";
+		        $sql = "UPDATE Posts WHERE PID=$postid SET title $newtitle SET content $newcontent";
 
 		        mysqli_query($db, $sql);
 
@@ -150,6 +130,34 @@ if(!isset($_SESSION['user'])) {
 			</form>
 
 <?php 		} 
+
+			if(isset($_POST['Entereditcontent'])) {
+				$postid = $_POST['postid'];
+				//$postid = 17;
+
+				/*$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+		        if (mysqli_connect_errno()) {
+		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+		        }*/
+
+		        $body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
+
+		        while($row = mysqli_fetch_array($body)) {
+			    	echo '<div class="blag-body">
+					<h3>' . $row['title'] . '</h3>
+					<p>' . $row['content'] . '</p>
+					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
+				  	</div>';
+				  	?>
+				  	<!-- Does not let you use apostraphes, parentheses, or stuff like that -->
+				  	<script type="text/javascript">updateForm("<?php echo $row['title']; ?>", "<?php echo $row['content']; ?>");
+				  	</script>
+				  	<?php
+
+				}
+
+			}
+
 ?>
 </div>
 
