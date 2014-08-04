@@ -18,7 +18,3 @@ Also delete the `$installed = 'true';` from user.php because I need that to test
 Uses the awesome [TinyMCE](http://www.tinymce.com/ "TinyMCE website") for the edit page if you want it to.<br>
 Also uses [PACE](http://github.hubspot.com/pace/docs/welcome/ "Pace website") for pageload animations if you want.
 <br>
-
-<br>
-note: the pabian.me server seems to have something wrong with running php correctly.
-I cannot fix that because I do not own the website :(
