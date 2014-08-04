@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('includes/config.php');
+require ('includes/config.php');
 $_SESSION['theme'] = $theme;
 if (!isset($_SESSION['mode'])) {
 	$_SESSION['mode'] = 'user';
@@ -8,6 +8,7 @@ if (!isset($_SESSION['mode'])) {
 if(!isset($_SESSION['user'])) {
 	$_SESSION['user'] = 'Guest';
 }
+$filterPref = $_SESSION['filterPref'];
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +16,6 @@ if(!isset($_SESSION['user'])) {
   <head>
     <title>Blag Test</title>
     <?php
-    	require ('/includes/config.php');
 
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
@@ -37,6 +37,17 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
+    <script src="js/jquery.smoothscroll.js"></script>
+    <style type="text/css">
+    img {
+    	width: 100% !important;
+    	height: auto !important;
+    }
+    iframe {
+    	width: 100% !important;
+    	height: auto !important;
+    }
+    </style>
   </head>
 <body>
 
@@ -54,9 +65,6 @@ if(!isset($_SESSION['user'])) {
 				?>
 					<script type="text/javascript">
 					$('.header').remove();
-					$('.homebtn').mouseenter(function() {
-						$(this).addClass('animated bounce');
-					});
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
@@ -64,7 +72,7 @@ if(!isset($_SESSION['user'])) {
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-							<span class='msg-welcome'>Heyo, <?php echo $_SESSION['username']; ?>!</span>
+							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
 				<?php
@@ -85,7 +93,20 @@ if(!isset($_SESSION['user'])) {
 				<?php
 				//echo "pagemode = user<br> ";
 			} else {
-				//echo 'fail ';
+				?>
+
+				<script type="text/javascript">
+					$('.header').remove();
+					</script>
+					<div class="header-admin">
+						<span class="header-content">
+							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
+							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
+						</span>
+					</div>
+
+				<?php
 			}
 		}
 
@@ -117,19 +138,47 @@ if(!isset($_SESSION['user'])) {
 		$start_page = ($pagenumber - 1) * 10;
 		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,10"); //This works!
 
-		while($row = mysqli_fetch_array($body)) {
-		    echo '<div class="blag-body">
-				<h3>' . $row['title'] . '</h3>
-				<p>' . $row['content'] . '</p>
-				<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
-			if ($_SESSION['mode'] == 'admin') {
-				echo '<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
-				<input type="hidden" name="postid" value="' . $row["PID"] . '">
-				<input type="submit" value="Edit" name="Entereditcontent">
-				</form>';
-				echo '<div class="editdelete"><a onclick="document.getElementById(editpost' . $row['PID'] . ').submit();">Edit</a> <i class="fa fa-circle-o"></i> <a onclick="">Delete</a></div>';
-			  }
-			echo '</div>';
+		date_default_timezone_set('America/New_York'); //set timezone
+
+		$date1 = new DateTime($_SESSION['age']); //compare age from database with current time
+		$date2 = new DateTime();
+		$interval = $date1->diff($date2);
+		//echo "difference " . $interval->y . " years, " . $interval->m." months, ".$interval->d." days ";
+
+		if ($interval->y >= 18 && $filterPref == 0) { //if age > 18, display unfiltered if filter is off
+			while($row = mysqli_fetch_array($body)) {
+			    echo '<div class="blag-body">
+					<h3>' . $row['title'] . '</h3>
+					<p>' . $row['content'] . '</p>
+					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
+				if ($_SESSION['mode'] == 'admin') {
+					echo '<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
+					<input type="hidden" name="postid" value="' . $row["PID"] . '">
+					<input type="submit" value="Edit" name="Entereditcontent" style="display:none">
+					</form>';
+					echo '<div class="editdelete"><a onClick="document.getElementById(\'editpost' . $row['PID'] . '\').submit();">Edit</a> <i class="fa fa-circle-o"></i> <a onclick="">Delete</a></div>';
+				  } else if ($_SESSION['mode'] == 'loggeduser') {
+				  	//reply button type stuff goes here
+				  }
+				echo ' 18+</div>';
+			}
+		} else { //same stuff but filtered for 17-
+			while($row = mysqli_fetch_array($body)) {
+			    echo '<div class="blag-body">
+					<h3>' . $row['title'] . '</h3>
+					<p>' . $row['content'] . '</p>
+					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
+				if ($_SESSION['mode'] == 'admin') {
+					echo '<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
+					<input type="hidden" name="postid" value="' . $row["PID"] . '">
+					<input type="submit" value="Edit" name="Entereditcontent" style="display:none">
+					</form>';
+					echo '<div class="editdelete"><a onClick="document.getElementById(\'editpost' . $row['PID'] . '\').submit();">Edit</a> <i class="fa fa-circle-o"></i> <a onclick="">Delete</a></div>';
+				  } else if ($_SESSION['mode'] == 'loggeduser') {
+				  	//reply button type stuff goes here
+				  }
+				echo '</div>';
+			}
 		}
 
 		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Posts");
@@ -139,7 +188,7 @@ if(!isset($_SESSION['user'])) {
 	}
 	?>
 	<div class="footer">
-		<!-- &copy; 2014 Theodore Kluge -->
+		<div class="pagn" style="float:left;margin-top:3px">&copy; 2014 Theodore Kluge</div>
 		<div class="pagn">
 			Pages: 
 			<?php
@@ -169,6 +218,7 @@ if(!isset($_SESSION['user'])) {
 				  <!-- <input type="submit" name="Login" value="Login"> -->
 		      </div>
 		      <div class="modal-footer">
+		        <a href="register.php" class="reg" style="float: left">Sign up</a>
 		        <button type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
 		        <!-- <input type="submit" name="login" value="Login"> -->
 		      </div>

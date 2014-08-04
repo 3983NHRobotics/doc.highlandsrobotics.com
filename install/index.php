@@ -57,13 +57,22 @@ $installed = true;
             $sql = 'CREATE TABLE Users(
                 PID INT NOT NULL AUTO_INCREMENT, 
                 PRIMARY KEY(PID),
-                name CHAR(50), 
-                pass CHAR(50), 
-                email CHAR(50),
-                disname CHAR(20))';
-            $age = mysqli_real_escape_string($db, $_POST['uage']);
-            $uname = sha1($_POST['uname']);
-            $upass = sha1(md5(sha1($_POST['upass'])));
+                name VARCHAR(50), 
+                pass VARCHAR(512), 
+                email VARCHAR(50),
+                disname VARCHAR(50),
+                age INT,
+                isAdmin TINYINT,
+                filterPref TINYINT),';
+            $age = htmlentities($_POST['uage']);
+            $uname = addslashes($_POST['uname']);
+            $options = [
+                'cost' => 11,
+            ];
+
+            $upass = password_hash(addslashes($_POST['upass']), PASSWORD_BCRYPT, $options);
+            //$upass = sha2($_POST['upass'], 512);
+            $default = 'not set';
 
             // Execute query
             if (mysqli_query($db,$sql)) {
@@ -72,9 +81,14 @@ $installed = true;
               echo "Error creating table: " . mysqli_error($db);
             }
 
-            $sql = "INSERT INTO Users (name, pass)
+            $sql = "INSERT INTO Users (name, pass, email, disname, age, isAdmin)
                     VALUES ('$uname', 
-                    '$upass')";
+                    '$upass',
+                    '$default',
+                    '$default',
+                    '$default',
+                    '1',
+                    '1')";
 
             if (!mysqli_query($db,$sql)) {
                 die('Error: ' . mysqli_error($db));
@@ -84,14 +98,16 @@ $installed = true;
             $sql = 'CREATE TABLE Posts(
                 PID INT NOT NULL AUTO_INCREMENT, 
                 PRIMARY KEY(PID),
-                title CHAR(50), 
-                content TEXT(500),
-                creator CHAR(20),
-                timestamp CHAR(30))';
+                title VARCHAR(50), 
+                content TEXT,
+                creator VARCHAR(50),
+                timestamp VARCHAR(30),
+                tags VARCHAR(100))';
             $firstpost_title = 'Welcome to Blag';
             $firstpost_content = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 4 days!";
             $firstpost_creator = 'blag';
-            $firstpost_timestamp = 'TIME OF CREATION';
+            $firstpost_timestamp = date('m/d/Y h:i:s a', time());
+            $firstpost_tags = 'first';
 
             // Execute query
             if (mysqli_query($db,$sql)) {
@@ -100,16 +116,18 @@ $installed = true;
               echo "Error creating table: " . mysqli_error($db);
             }
 
-            $sql = "INSERT INTO Posts (title, content, creator, timestamp)
+            $sql = "INSERT INTO Posts (title, content, creator, timestamp, tags)
                     VALUES ('$firstpost_title', 
                     '$firstpost_content', 
                     '$firstpost_creator',
-                    '$firstpost_timestamp')";
+                    '$firstpost_timestamp',
+                    '$firstpost_tags')";
 
             if (!mysqli_query($db,$sql)) {
                 die('Error: ' . mysqli_error($db));
             }
 
+            header("Location: /blag/index.php");
 
         } 
 

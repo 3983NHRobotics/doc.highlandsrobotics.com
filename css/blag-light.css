@@ -99,8 +99,13 @@ body {
 	background: #aaa;
 	border-radius: 5px;
 	border: #888 1px solid;
+	margin-top: 5px;
 	-webkit-transition: background .4s ease-in-out;
           transition: background .4s ease-in-out;
+}
+.btn-register {
+	width: 200px;
+	float: right;
 }
 .btn-submit:hover {
 	background: #999;
@@ -204,6 +209,10 @@ body {
 		width: 30%;
 		margin: 15% auto 0px auto;
 	}
+	.blag-register-body {
+		width: 30%;
+		margin: 10% auto 0px auto;
+	}
 	.loginpage-content {
 		width: 100%;
 		position: relative;
@@ -268,15 +277,16 @@ hr {
 }
 
 .footer {
-	position: relative;
+	position: static;
 	width: 100%;
 	bottom: 0px;
 	height: 40px;
 	margin-top: 30px;
 	border-top: #000 1px solid;
+	border-bottom: #000 1px solid;
 	/*border-top-left-radius: 10px;
 	border-top-right-radius: 10px;*/
-	/*background: rgba(0,0,0,.25);*/
+	background: rgba(255,255,255,.6);
 }
 
 .pagn {
@@ -298,9 +308,9 @@ hr {
 .pagnbtn:hover {
 	color: #c04000;
 	background: rgba(0,0,0,.25);
-	transform:rotate(-30deg);
-    -ms-transform:rotate(-30deg);
-    -webkit-transform:rotate(-30deg);
+	/*transform:rotate(-20deg);
+    -ms-transform:rotate(-20deg);
+    -webkit-transform:rotate(-20deg);*/
 }
 
 iframe {

@@ -1,8 +1,8 @@
 <?php 
 
-$dbuname = "blag";
+$dbuname = "blag2";
 
-$dbupass = "4HQV2tzRqGU98DnL";
+$dbupass = "uvUsdDJCs9rFjHrB";
 
 $dbhost = "localhost";
 

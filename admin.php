@@ -12,7 +12,7 @@ if(!isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Blag Test - Admin</title>
+    <title>Blag - Admin</title>
 
         <?php
     	require ('/includes/config.php');
