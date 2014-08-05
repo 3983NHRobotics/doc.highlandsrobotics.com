@@ -57,8 +57,8 @@ if(!isset($_SESSION['user'])) {
 
 			if(isset($_POST["Submit"])) {
 				//Change this so that apostraphes and stuff can be used
-				$title = mysql_real_escape_string($_POST["title"]);
-				$content = mysql_real_escape_string($_POST["content"]);
+				$title = htmlentities($_POST["title"]);
+				$content = htmlentities($_POST["content"]);
 				$creator = $_SESSION['username'];
 				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
 

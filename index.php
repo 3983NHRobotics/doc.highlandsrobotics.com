@@ -37,6 +37,16 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
+    <style type="text/css">
+    img {
+    	width: 100% !important;
+    	height: auto !important;
+    }
+    iframe {
+    	width: 100% !important;
+    	height: auto !important;
+    }
+    </style>
   </head>
 <body>
 
@@ -54,9 +64,6 @@ if(!isset($_SESSION['user'])) {
 				?>
 					<script type="text/javascript">
 					$('.header').remove();
-					$('.homebtn').mouseenter(function() {
-						$(this).addClass('animated bounce');
-					});
 					</script>
 					<div class="header-admin">
 						<span class="header-content">

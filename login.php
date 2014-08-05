@@ -126,12 +126,28 @@ if(!isset($_SESSION['user'])) {
         }
 
 		if(isset($_POST['Login'])) {
-			$unamesub = sha1($_POST['unamesub']);
-			$upassSHA = sha1(md5(sha1($_POST['upasssub'])));
+			$unamesub = $_POST['unamesub'];
+			$upassSHA = ($_POST['upasssub']);
 
 			$user = mysqli_query($db,"SELECT * FROM Users WHERE name='$unamesub'");
 			$row = mysqli_fetch_array($user);
-			if ($upassSHA === $row['pass']) {
+
+			$passwordFromPost = $_POST['upasssub'];
+			$hashedPasswordFromDB = $row['pass'];
+
+			if (password_verify($passwordFromPost, $hashedPasswordFromDB)) {
+			    $_SESSION['mode'] = 'admin';
+				$_SESSION['user'] = $unamesub;
+				$_SESSION['username'] = $_POST['unamesub'];
+				checkMode('login');
+				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				echo 'bla';
+				die();
+			} else {
+			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
+			}
+
+			/*if ($upassSHA === $row['pass']) {
 			 	$_SESSION['mode'] = 'admin';
 				$_SESSION['user'] = $unamesub;
 				$_SESSION['username'] = $_POST['unamesub'];
@@ -141,7 +157,7 @@ if(!isset($_SESSION['user'])) {
 				die();
 			} else {
 			   	echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
-			}
+			}*/
 		}
 
 		if(isset($_POST['Logout'])) {
