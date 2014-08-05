@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 require('includes/config.php');
 
 $_SESSION['theme'] = $theme;
@@ -18,8 +16,6 @@ if(!isset($_SESSION['user'])) {
   <head>
     <title>Blag Test</title>
     <?php
-    	include('/includes/paths.php');
-    	require ('/includes/config.php');
 
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
@@ -41,7 +37,6 @@ if(!isset($_SESSION['user'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
-    <script src="js/blag_parser.js"></script>
 
   </head>
 <body>
@@ -61,21 +56,6 @@ if(!isset($_SESSION['user'])) {
 
 			if ($_SESSION['mode'] === 'admin') {
 
-				?>
-				<!--WILL NEVER BE SEEN - PAGE REDIRECTS IF PAGEMODE IS ADMIN -->
-					<script type="text/javascript">
-					$('.header').remove();
-					</script>
-					<div class="header-admin">
-						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
-							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-							<span class='msg-welcome'>Welcome, <?php echo $_SESSION['user']; ?></span>
-						</span>
-					</div>
-				<?php
 				//echo "pagemode = admin<br> ";
 			} else if ($_SESSION['mode'] === 'user') {
 				$_SESSION['user'] = 'Guest';
@@ -91,20 +71,26 @@ if(!isset($_SESSION['user'])) {
 						</span>
 					</div>
 
-					<form action="login.php" method="post" name="login" id="login" onsubmit="">
+					<form action="register.php" method="post" name="register" id="register" onsubmit="">
 				        
-				      <div class="blag-login-body">
+				      <div class="blag-register-body">
 
 				      		<p class="loginpage-title"><?php echo $title; ?></p>
 							
-							<label class="loginpage-content-title" for="uname"><i class="fa fa-user"></i> Username</label>
-						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="" placeholder=" Username"> 
+							<label class="loginpage-content-title" for="uname"><i class="fa fa-user"></i> Username*</label>
+						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="<?php if(isset($_POST['unamesub'])) { echo addslashes($_POST['unamesub']);} ?>" placeholder=" Username" required> 
 						
-							<label class="loginpage-content-title" for="upass"><i class="fa fa-unlock-alt"></i> Password</label>
-						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password"> 
+							<label class="loginpage-content-title" for="upass"><i class="fa fa-unlock-alt"></i> Password*</label>
+						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password" required>
 
-				        <button style="visibility: hidden" type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
-				        <a href="register.php" class="reg" style="position: absolute; bottom: 10px; left: 10px">Sign up</a>
+						    <label class="loginpage-content-title" for="uemail"><i class="fa fa-envelope"></i> Email*</label>
+						    <input class="loginpage-content" name="uemailsub" type="text" id="uemail" value="<?php if(isset($_POST['uemailsub'])) {echo addslashes($_POST['uemailsub']);}?>" placeholder=" Email address" required> 
+
+						    <label class="loginpage-content-title" for="uage"><i class="fa fa-certificate"></i> Birthdate*</label>
+						    <input class="loginpage-content" name="uagesub" type="text" id="uage" placeholder=" YYYY-mm-dd" required>
+						    <!-- replace text form with date dropdowns -->
+
+				        <button style="" type="submit" name="Register" class="btn btn-submit btn-register" onclick="document.register.submit();">Register</button>
 
 				       </div>
 				  	</form>
@@ -118,7 +104,6 @@ if(!isset($_SESSION['user'])) {
 		}
 
 		checkMode('init');
-		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
 		$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
         if (mysqli_connect_errno()) {
@@ -126,79 +111,42 @@ if(!isset($_SESSION['user'])) {
         echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
         }
 
-		if(isset($_POST['Login'])) {
-<<<<<<< HEAD
-			$unamesub = $_POST['unamesub'];
-			$upassSHA = ($_POST['upasssub']);
-=======
+		if(isset($_POST['Register'])) {
 			$unamesub = addslashes($_POST['unamesub']);
-			$upassSHA = addslashes($_POST['upasssub']);
->>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
+			$uemailsub = addslashes($_POST['uemailsub']);
+			$uage = $_POST['uagesub'];
 
-			$user = mysqli_query($db,"SELECT * FROM Users WHERE name='$unamesub'");
-			$row = mysqli_fetch_array($user);
+			 $options = [
+                'cost' => 11,
+            ];
 
-			$passwordFromPost = $_POST['upasssub'];
-			$hashedPasswordFromDB = $row['pass'];
-<<<<<<< HEAD
+            $upass = password_hash(addslashes($_POST['upasssub']), PASSWORD_BCRYPT, $options);
+            //$upass = SHA2($_POST['upass'], 512);
+            $default = 'not set';
 
-			if (password_verify($passwordFromPost, $hashedPasswordFromDB)) {
-			    $_SESSION['mode'] = 'admin';
-				$_SESSION['user'] = $unamesub;
-				$_SESSION['username'] = $_POST['unamesub'];
-				checkMode('login');
-				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
-				echo 'bla';
-				die();
-			} else {
-			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
-			}
+			$passwordFromPost = $upass;
 
-			/*if ($upassSHA === $row['pass']) {
-			 	$_SESSION['mode'] = 'admin';
-=======
-			$mode = $row['isAdmin'];
-			echo "<script type='text/javascript'>console.log('" . $mode . "');</script>";
+			//check to see if uname/email is taken
 
-			if (password_verify($passwordFromPost, $hashedPasswordFromDB)) {
-				if($mode == 1) {
-			    	$_SESSION['mode'] = 'admin';
-				} else {
-					$_SESSION['mode'] = 'loggeduser';
-				}
->>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
-				$_SESSION['user'] = $unamesub;
-				$_SESSION['username'] = $row['disname'];
-				$_SESSION['age'] = $row['age'];
-				$_SESSION['filterPref'] = $row['filterPref'];
-				checkMode('login');
-				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
-				echo 'bla';
-				die();
-			} else {
-<<<<<<< HEAD
-			   	echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
-			}*/
-=======
-			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
-			}
->>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
+			$sql = "INSERT INTO Users (name, pass, email, disname, age, isAdmin, filterPref)
+                    VALUES ('$unamesub', 
+                    '$passwordFromPost',
+                    '$uemailsub',
+                    '$unamesub',
+                    '$uage',
+                    '0',
+                    '0')";
+
+            if (!mysqli_query($db,$sql)) {
+                die('Error: ' . mysqli_error($db));
+            }
+
+			header('Location: ' . dirname($_SERVER['REQUEST_URI']) . '/login.php');
+				
 		}
-
-		if(isset($_POST['Logout'])) {
-			$_SESSION['user'] = 'Guest';
-			$_SESSION['username'] = 'Guest';
-			$_SESSION['mode'] = 'user';
-			checkMode('logout');
-			//header('Location: index.php');
-			//echo 'Test';
-			session_unset();
-		}
-
 	?>
 
-	<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
 		  <form action="login.php" method="post" name="login" id="login" onsubmit="">
@@ -224,10 +172,6 @@ if(!isset($_SESSION['user'])) {
     </div>
   </div>
 </div>
-
-	<form action="login.php" method="post" name="logout" id="logout">
-		<input type="hidden" value="logout">
-	</form>
 
 	<!--<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

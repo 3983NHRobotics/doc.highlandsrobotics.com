@@ -57,16 +57,24 @@ if(!isset($_SESSION['user'])) {
 
 			if(isset($_POST["Submit"])) {
 				//Change this so that apostraphes and stuff can be used
+<<<<<<< HEAD
 				$title = htmlentities($_POST["title"]);
 				$content = htmlentities($_POST["content"]);
+=======
+				$title = addslashes($_POST["title"]);
+				$content = addslashes($_POST["content"]);
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
 				$creator = $_SESSION['username'];
+				date_default_timezone_set('America/New_York');
 				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
+				$tags = addslashes($_POST['tags']);
 
-		        $sql = "INSERT INTO Posts (title, content, creator, timestamp)
+		        $sql = "INSERT INTO Posts (title, content, creator, timestamp, tags)
                     VALUES ('$title', 
                     '$content', 
                     '$creator',
-                    '$timestamp')";
+                    '$timestamp',
+                    '$tags')";
 
 	            if (!mysqli_query($db,$sql)) {
 	                die('Error: ' . mysqli_error($db));
@@ -112,6 +120,8 @@ if(!isset($_SESSION['user'])) {
 			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
 
 			<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
+
+			<p><input type="hidden" value="hi" name="tags">
 
 			<p><input class="btn btn-submit" type="submit" name="Submit" value="Post">
 
