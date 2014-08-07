@@ -59,7 +59,7 @@ if(!isset($_SESSION['user'])) {
 				//Change this so that apostraphes and stuff can be used
 				$title = addslashes($_POST["title"]);
 				$content = addslashes($_POST["content"]);
-				$creator = $_SESSION['username'];
+				$creator = '<a href="user.php?u=' . $_SESSION['user'] . '">' . $_SESSION['username'] . '</a>';
 				date_default_timezone_set('America/New_York');
 				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
 				$tags = addslashes($_POST['tags']);
@@ -84,25 +84,37 @@ if(!isset($_SESSION['user'])) {
 			if(isset($_POST['Edit'])) {
 				$newtitle = $_POST['title'];
 				$newcontent = $_POST['content'];
+				$postid = $_POST['postid'];
 
-		        $sql = "UPDATE Posts WHERE PID=$postid SET title $newtitle SET content $newcontent";
+				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+				if (mysqli_connect_errno()) {
+		        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
+		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
+		        }
 
-		        mysqli_query($db, $sql);
+		        $sql = "UPDATE Posts SET title='$newtitle', content='$newcontent' WHERE PID=$postid";
+
+		        if (!mysqli_query($db,$sql)) {
+	                die('Error: ' . mysqli_error($db));
+	            }
 
 		        mysqli_close($db);
+		        header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+		        //echo 'pjrsohs';
 			}
 			
 		?>
 
 <div class="header-admin">
-	<span class="header-content">
-		<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
-		<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-		<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-		<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-		<span class='msg-welcome'>Heyo, <?php echo $_SESSION['username']; ?>!</span>
-	</span>
-</div>			
+						<span class="header-content">
+							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
+							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
+						</span>
+					</div>	
 
 <div class="blag-body">
 <?php 
@@ -124,13 +136,13 @@ if(!isset($_SESSION['user'])) {
 
 <?php 		} else if ($_GET['action'] === 'edit') { ?>
 
-			<form action="" method="post" name="edit" id="submit">
+			<form action="" method="post" name="Edit" id="edit">
 
 			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
 
 			<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
 
-			<p><input class="btn btn-submit" type="submit" name="Edit" value="Post">
+			<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
 
 			</form>
 
@@ -138,23 +150,18 @@ if(!isset($_SESSION['user'])) {
 
 			if(isset($_POST['Entereditcontent'])) {
 				$postid = $_POST['postid'];
-				//$postid = 17;
 
-				/*$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
-		        if (mysqli_connect_errno()) {
-		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
-		        }*/
+				echo '<script language="javascript">$("form#edit").prepend("<input type=\"hidden\" name=\"postid\" value=\"' . $postid . '\">");</script>';
 
 		        $body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
 
 		        while($row = mysqli_fetch_array($body)) {
-			    	echo '<div class="blag-body">
+			    	/*echo '<div class="blag-body">
 					<h3>' . $row['title'] . '</h3>
 					<p>' . $row['content'] . '</p>
 					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
-				  	</div>';
+				  	</div>';*/
 				  	?>
-				  	<!-- Does not let you use apostraphes, parentheses, or stuff like that -->
 				  	<script type="text/javascript">updateForm("<?php echo $row['title']; ?>", "<?php echo $row['content']; ?>");
 				  	</script>
 				  	<?php

@@ -42,6 +42,17 @@ if(!isset($_SESSION['user'])) {
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
     <script src="js/blag_parser.js"></script>
+    <style type="text/css">
+
+	    .uname-val {
+	    	float: right;
+	    	position: relative;
+	    	margin: -35px 6px 0px 0px;
+	    	font-size: 15px;
+	    	color: rgba(0,0,0,0);
+	    }
+
+    </style>
 
   </head>
 <body>
@@ -62,7 +73,7 @@ if(!isset($_SESSION['user'])) {
 			if ($_SESSION['mode'] === 'admin') {
 
 				?>
-				<!--WILL NEVER BE SEEN - PAGE REDIRECTS IF PAGEMODE IS ADMIN -->
+				<!--WILL NEVER BE SEEN -->
 					<script type="text/javascript">
 					$('.header').remove();
 					</script>
@@ -70,9 +81,10 @@ if(!isset($_SESSION['user'])) {
 						<span class="header-content">
 							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
+							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
 							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-							<span class='msg-welcome'>Welcome, <?php echo $_SESSION['user']; ?></span>
+							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
 				<?php
@@ -98,12 +110,14 @@ if(!isset($_SESSION['user'])) {
 				      		<p class="loginpage-title"><?php echo $title; ?></p>
 							
 							<label class="loginpage-content-title" for="uname"><i class="fa fa-user"></i> Username</label>
-						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="" placeholder=" Username"> 
+						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="" placeholder=" Username" onBlur="check_availability()">
+						    <i class="fa fa-check-square uname-val" id="namevalid"></i>
 						
 							<label class="loginpage-content-title" for="upass"><i class="fa fa-unlock-alt"></i> Password</label>
-						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password"> 
+						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password">
+						    <i class="fa fa-check-square uname-val" id="passvalid"></i>
 
-				        <button style="visibility: hidden" type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
+				        <button type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
 				        <a href="register.php" class="reg" style="position: absolute; bottom: 10px; left: 10px">Sign up</a>
 
 				       </div>
@@ -139,6 +153,9 @@ if(!isset($_SESSION['user'])) {
 			echo "<script type='text/javascript'>console.log('" . $mode . "');</script>";
 
 			if (password_verify($passwordFromPost, $hashedPasswordFromDB)) {
+				echo "<script type='text/javascript'>$('#passvalid').css('color','#99c68e') //light green
+						.removeClass('fa-exclamation-triangle')
+						.addClass('fa-check-square');</script>";
 				if($mode == 1) {
 			    	$_SESSION['mode'] = 'admin';
 				} else {
@@ -146,14 +163,18 @@ if(!isset($_SESSION['user'])) {
 				}
 				$_SESSION['user'] = $unamesub;
 				$_SESSION['username'] = $row['disname'];
+				$_SESSION['email'] = $row['email'];
 				$_SESSION['age'] = $row['age'];
 				$_SESSION['filterPref'] = $row['filterPref'];
 				checkMode('login');
+				//sleep(1); //pointless
 				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
-				echo 'bla';
 				die();
 			} else {
 			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
+			    echo "<script type='text/javascript'>$('#passvalid').css('color','#e77471') //light red
+						.removeClass('fa-check-square')
+						.addClass('fa-exclamation-triangle');</script>";
 			}
 		}
 
@@ -176,7 +197,7 @@ if(!isset($_SESSION['user'])) {
 		  <form action="login.php" method="post" name="login" id="login" onsubmit="">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-unlock"></i> Site unlock</h4>
+		        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-unlock"></i> Login</h4>
 		      </div>
 		      <div class="modal-body">
 				    <p>
@@ -200,6 +221,29 @@ if(!isset($_SESSION['user'])) {
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">
 	</form>
+
+	<script type="text/javascript">
+	function check_availability() {  
+
+        var username = $('#uname').val(); 
+
+        if(username.length >= 1)  {
+  
+	        $.post("dbquery.php", { username: username },  
+	            function(result) {  
+	                if (result == 0) {  
+	                    $('#namevalid').css('color','#99c68e') //light green
+						.removeClass('fa-exclamation-triangle')
+						.addClass('fa-check-square'); 
+	                } else {  
+	                    $('#namevalid').css('color','#e77471') //light red
+						.removeClass('fa-check-square')
+						.addClass('fa-exclamation-triangle');
+	                }  
+	        });  
+	    }
+	}  
+	</script>
 
 	<!--<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

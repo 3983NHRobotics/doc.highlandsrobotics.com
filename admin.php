@@ -49,14 +49,15 @@ if(!isset($_SESSION['user'])) {
 	</div>
 
 <div class="header-admin">
-	<span class="header-content">
-		<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
-		<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-		<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-		<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
-		<span class='msg-welcome'>Heyo, <?php echo $_SESSION['username']; ?>!</span>
-	</span>
-</div>	
+						<span class="header-content">
+							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
+							<a href="/blag/user.php" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
+						</span>
+					</div>
 
 	<?php
 		//Read from the pages file to get contents because an efficient database is too efficient.

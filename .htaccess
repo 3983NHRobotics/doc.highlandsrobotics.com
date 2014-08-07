@@ -1,5 +1,6 @@
-ErrorDocument 404 /404.php
-ErrorDocument 500 /500.php
+RewriteEngine on
+ErrorDocument 404 /blag/error.php?http_error=404
+ErrorDocument 500 /blag/error.php?http_error=500
 
 AddType font/ttf .ttf
 AddType font/eot .eot

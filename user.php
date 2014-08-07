@@ -11,7 +11,7 @@ if(!isset($_SESSION['user'])) {
 if (!isset($_SESSION['filterpref'])) {
 	$filterPref = 1;
 }
-//error_reporting(0);//remove for debug
+error_reporting(0);//remove for debug
 ?>
 
 <!DOCTYPE html>
@@ -115,26 +115,12 @@ if (!isset($_SESSION['filterpref'])) {
 	        //echo "Failed to connect to MySQL: " . mysqli_connect_error();
 	        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
         } else {
+        $user = $_GET['u'];
+        $userq = mysqli_query($db,"SELECT * FROM Users WHERE name='$user'");
+		$row = mysqli_fetch_array($userq);
+		$username = $row['disname'];
 
 		checkMode('init');
-		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
-
-		if (!empty($_GET['p'])) {
-			$pagenumber = $_GET['p'];
-		} else {
-			$_GET['p'] = '1';
-			$pagenumber = '1';
-		}
-		//display the greeting post
-		if ($_GET['p'] == '1') {
-			echo '<div class="blag-body">
-					<h2 style="text-align:center"> '. $greeting .'</h2>
-					<h4 style="text-align:center">' . $greetingContent . '</h4>
-				  </div>';
-		}
-
-		$start_page = ($pagenumber - 1) * 10;
-		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,10"); //This works!
 
 		date_default_timezone_set('America/New_York'); //set timezone
 		try {
@@ -146,70 +132,49 @@ if (!isset($_SESSION['filterpref'])) {
 			//do nothing :D
 		}
 
-		if ($interval->y >= 18 && $filterPref == 0) { //if age > 18, display unfiltered if filter is off
-			while($row = mysqli_fetch_array($body)) {
-			    echo '<div class="blag-body">
-					<h3>' . $row['title'] . '</h3>
-					<p>' . $row['content'] . '</p>
-					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
-				if ($_SESSION['mode'] == 'admin') {
-					echo '<div class="editdelete">';
-					echo '<form action="dbquery.php" method="post" name="deletepost" id="delpost' . $row['PID'] . '">
-					<input type="hidden" name="postid" value="' . $row["PID"] . '">
-					<button type="submit" value="Delete" name="deletepost" class="editdelbtn" onClick="return confirm(\'Are you sure you want to delete this post?\')">Delete</button>
-					</form>';
-					echo '<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
-					<input type="hidden" name="postid" value="' . $row["PID"] . '">
-					<button type="submit" value="Edit" name="Entereditcontent" class="editdelbtn">Edit</button>
-					</form>';
-					echo'</div>';
-					//echo '<div class="editdelete"><a onClick="document.getElementById(\'editpost' . $row['PID'] . '\').submit()">Edit</a> <i class="fa fa-circle-o"></i> <a href="#" data-toggle="modal" data-target="#delModal" onClick="updateDelModal(' . $row['PID'] . ')">Delete</a></div>';
-				  } else if ($_SESSION['mode'] == 'loggeduser') {
-				  	//reply button type stuff goes here
-				  }
-				echo ' +</div>';
-			}
-		} else { //same stuff but filtered for 17-
-			while($row = mysqli_fetch_array($body)) {
-			    echo '<div class="blag-body">
-					<h3>' . $row['title'] . '</h3>
-					<p>' . $row['content'] . '</p>
-					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
-				if ($_SESSION['mode'] == 'admin') {
-					echo '<div class="editdelete">';
-					echo '<form action="dbquery.php" method="post" name="deletepost" id="delpost' . $row['PID'] . '">
-					<input type="hidden" name="postid" value="' . $row["PID"] . '">
-					<button type="submit" value="Delete" name="deletepost" class="editdelbtn" onClick="return confirm(\'Are you sure you want to delete this post?\')">Delete</button>
-					</form>';
-					echo '<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
-					<input type="hidden" name="postid" value="' . $row["PID"] . '">
-					<button type="submit" value="Edit" name="Entereditcontent" class="editdelbtn">Edit</button>
-					</form>';
-					echo'</div>';
-					//echo '<div class="editdelete"><a onClick="document.getElementById(\'editpost' . $row['PID'] . '\').submit()">Edit</a> <i class="fa fa-circle-o"></i> <a href="#" data-toggle="modal" data-target="#delModal" onClick="updateDelModal(' . $row['PID'] . ')">Delete</a></div>';
-				  } else if ($_SESSION['mode'] == 'loggeduser') {
-				  	//reply button type stuff goes here
-				  }
-				echo '</div>';
-			}
-		}
-
-		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Posts");
-		$row = mysqli_fetch_row($pages);
-		$total_things = $row[0];
-		$total_pages = ceil($total_things / 10); //gets the number of pages for pagination
+		$email = $row['email'];
+		$bio = $row['bio'];
+		$size = 300;
+		$grav_url = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?d=" . urlencode( $default ) . "&s=" . $size . "&d=retro";
 	}
 	?>
-	<div class="footer">
-		<div class="pagn" style="float:left;margin-top:3px">&copy; 2014 Theodore Kluge</div>
-		<div class="pagn">
-			Pages: 
-			<?php
-				for ($i = 1; $i <= $total_pages; $i++) { 
-	            	echo "<a class='pagnbtn' href='" . dirname($_SERVER['SCRIPT_NAME']) . "/?p=" . $i . "'>" . $i . "</a> "; 
-				}
+
+	<section class="userinfo">
+	<img class="userinfo-userpic" src="<?php echo $grav_url; ?>" alt="" />
+		<section class="userinfo-right">
+			<h3 class="userinfo-username">
+			<?php if($_SESSION['user'] === $user) { ?>
+				
+				<p><input class="userinfo-username-edit userinfo-editable"  type="text" name="username" id="username" placeholder="Set your display name" value="<?php echo $username ?>" onFocus="recordName()" onBlur="updateName()"></p>
+
+			<?php 
+				} else {
+					echo $username;
+				} 
 			?>
-		</div>
+			</h3>
+			<?php if($user != $username) { ?>
+			<h4 class="userinfo-username"><i><?php echo $user ?></i></h4>
+			
+			<?php }
+				if ($_SESSION['user'] === $user) { ?>
+				<p><textarea class="userinfo-edit userinfo-editable" name="content" id="bio" placeholder="Write a little about yourself!" onFocus="recordBio()" onBlur="updateBio()"><?php echo $bio ?></textarea></p>
+			<?php 
+			} else { 
+				echo '<p class="userinfo-bio">';
+				echo $bio;
+				echo '</p>';
+			 }
+			?>
+
+			<i class="fa fa-gear fa-spin userinfo-working"></i>
+			
+		</section>
+	</section>
+
+
+	<div class="footer" style="bottom:0px;position:absolute;">
+		<div class="pagn" style="float:left;margin-top:3px">&copy; 2014 Theodore Kluge</div>
 	</div>
 
 <!-- Modal -->
@@ -240,30 +205,19 @@ if (!isset($_SESSION['filterpref'])) {
   </div>
 </div>
 
-<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-warning"></i> Confirm deletion</h4>
-		      </div>
-		      <div class="modal-body">
-				    <p>
-				      Are you sure you want to delete this post? 
-				  </p>
-		      </div>
-		      <div class="modal-footer">
-		        <button id="delSubBtn" data-dismiss="modal" value="Delete" name="deletepost" class="btn btn-submit" onClick="document.getElementById('delpost').submit()">Delete</button>
-		      </div>
-    </div>
-  </div>
-</div>
-
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">
 	</form>
 
 	<script type="text/javascript">
+	var currentName;
+	var currentBio;
+
+	$('textarea#bio').css('width', $('input.userinfo-username-edit').css('width'));
+	$(window).resize(function() {
+		$('textarea#bio').css('width', $('input.userinfo-username-edit').css('width'));
+	});
+
 	function updateDelModal(pid) {
 		//$('#delSubBtn').attr('onClick', '$("#delpost' + pid + '").submit()');
 		//$('#delSubBtn').attr('onClick', 'document.getElementById("delpost' + pid + '").submit(); console.log(\'boop\')');
@@ -271,14 +225,52 @@ if (!isset($_SESSION['filterpref'])) {
 		$('#delModal').modal();
 	}
 
-	function confirmDelete() {
-		if(confirm("Are you sure you want to delete this post?")) {
-			return true;
-		} else {
-			return false;
-		}
-		
+	function recordName() {
+		currentName = $('input.userinfo-username-edit').val();
+		console.log("recorded name " + currentName);
 	}
+	function recordBio() {
+		currentBio = $('textarea#bio').val();
+		console.log("recorded bio " + currentBio);
+	}
+
+	function updateName() {
+		$('.userinfo-working').css('visibility','visible');
+		var udname = $('input.userinfo-username-edit').val();
+		if (udname != currentName) {
+			$.post("dbquery.php", { udname: udname }, function(result){
+		 		if (result == 1) {
+		 			console.log('username update successful');
+		 		} else {
+		 			console.log('username update failed');
+		 		}
+		 		$('.userinfo-working').css('visibility','hidden');
+	 		});  
+		} else {
+			console.log("name not changed");
+	 		$('.userinfo-working').css('visibility','hidden');	
+		}
+	}
+
+	function updateBio() {
+		$('.userinfo-working').css('visibility','visible');
+		var udbio = $('textarea#bio').val();
+		if (udbio != currentBio) {
+			$.post("dbquery.php", { udbio: udbio }, function(result){
+		 		if (result == 1) {
+		 			console.log('bio update successful');
+		 		} else {
+		 			console.log('bio update failed');
+		 		}
+		 		$('.userinfo-working').css('visibility','hidden');
+	 		});  
+		} else {
+			console.log("bio " + currentBio + " not changed");
+			$('.userinfo-working').css('visibility','hidden');
+		}
+
+	}
+
 	</script>
 
 	<!--<script>

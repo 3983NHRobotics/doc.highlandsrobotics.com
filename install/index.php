@@ -61,9 +61,10 @@ $installed = true;
                 pass VARCHAR(512), 
                 email VARCHAR(50),
                 disname VARCHAR(50),
+                bio TEXT,
                 age INT,
                 isAdmin TINYINT,
-                filterPref TINYINT),';
+                filterPref TINYINT)';
             $age = htmlentities($_POST['uage']);
             $uname = addslashes($_POST['uname']);
             $options = [
@@ -100,7 +101,7 @@ $installed = true;
                 PRIMARY KEY(PID),
                 title VARCHAR(50), 
                 content TEXT,
-                creator VARCHAR(50),
+                creator VARCHAR(150),
                 timestamp VARCHAR(30),
                 tags VARCHAR(100))';
             $firstpost_title = 'Welcome to Blag';
