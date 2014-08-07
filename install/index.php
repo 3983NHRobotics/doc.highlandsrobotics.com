@@ -36,7 +36,7 @@ $dbhost = "' . $_POST['dbhost'] . '";
 
 $dbname = "' . $_POST['dbname'] . '";
 
-$installed = true;
+//$installed = true;
 
 ?>';
 
@@ -61,17 +61,30 @@ $installed = true;
                 pass VARCHAR(512), 
                 email VARCHAR(50),
                 disname VARCHAR(50),
+<<<<<<< HEAD
                 bio TEXT,
+=======
+<<<<<<< HEAD
+                age INT)';
+            $age = htmlentities($_POST['uage']);
+            $uname = ($_POST['uname']);
+=======
+>>>>>>> 5e16c4265acc9355b9b64c35c57d0fc2219d7e99
                 age INT,
                 isAdmin TINYINT,
                 filterPref TINYINT)';
             $age = htmlentities($_POST['uage']);
             $uname = addslashes($_POST['uname']);
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
             $options = [
                 'cost' => 11,
             ];
 
+<<<<<<< HEAD
+            $upass = password_hash($_POST['upass'], PASSWORD_BCRYPT, $options);
+=======
             $upass = password_hash(addslashes($_POST['upass']), PASSWORD_BCRYPT, $options);
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
             //$upass = sha2($_POST['upass'], 512);
             $default = 'not set';
 
@@ -82,14 +95,22 @@ $installed = true;
               echo "Error creating table: " . mysqli_error($db);
             }
 
+<<<<<<< HEAD
+            $sql = "INSERT INTO Users (name, pass, email, disname, age)
+=======
             $sql = "INSERT INTO Users (name, pass, email, disname, age, isAdmin)
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
                     VALUES ('$uname', 
                     '$upass',
                     '$default',
                     '$default',
+<<<<<<< HEAD
+                    '$default')";
+=======
                     '$default',
                     '1',
                     '1')";
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
 
             if (!mysqli_query($db,$sql)) {
                 die('Error: ' . mysqli_error($db));
@@ -103,7 +124,11 @@ $installed = true;
                 content TEXT,
                 creator VARCHAR(150),
                 timestamp VARCHAR(30),
+<<<<<<< HEAD
+                tags VARCHAR)';
+=======
                 tags VARCHAR(100))';
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
             $firstpost_title = 'Welcome to Blag';
             $firstpost_content = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 4 days!";
             $firstpost_creator = 'blag';
@@ -170,7 +195,7 @@ $installed = true;
       <input class="loginpage-content" name="dbname" type="text" id="dbname"> 
   </p>
     <p>
-      <button class="btn btn-submit" type="submit" name="Submit" value="Install">Install</button>
+      <button class="btn btn-submit" type="submit" name="Submit" value="Install">Installe</button>
     </p>
   </form>
 </div>

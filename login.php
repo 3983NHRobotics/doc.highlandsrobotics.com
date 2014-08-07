@@ -141,14 +141,36 @@ if(!isset($_SESSION['user'])) {
         }
 
 		if(isset($_POST['Login'])) {
+<<<<<<< HEAD
+			$unamesub = $_POST['unamesub'];
+			$upassSHA = ($_POST['upasssub']);
+=======
 			$unamesub = addslashes($_POST['unamesub']);
 			$upassSHA = addslashes($_POST['upasssub']);
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
 
 			$user = mysqli_query($db,"SELECT * FROM Users WHERE name='$unamesub'");
 			$row = mysqli_fetch_array($user);
 
 			$passwordFromPost = $_POST['upasssub'];
 			$hashedPasswordFromDB = $row['pass'];
+<<<<<<< HEAD
+
+			if (password_verify($passwordFromPost, $hashedPasswordFromDB)) {
+			    $_SESSION['mode'] = 'admin';
+				$_SESSION['user'] = $unamesub;
+				$_SESSION['username'] = $_POST['unamesub'];
+				checkMode('login');
+				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				echo 'bla';
+				die();
+			} else {
+			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
+			}
+
+			/*if ($upassSHA === $row['pass']) {
+			 	$_SESSION['mode'] = 'admin';
+=======
 			$mode = $row['isAdmin'];
 			echo "<script type='text/javascript'>console.log('" . $mode . "');</script>";
 
@@ -161,6 +183,7 @@ if(!isset($_SESSION['user'])) {
 				} else {
 					$_SESSION['mode'] = 'loggeduser';
 				}
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
 				$_SESSION['user'] = $unamesub;
 				$_SESSION['username'] = $row['disname'];
 				$_SESSION['email'] = $row['email'];
@@ -171,11 +194,16 @@ if(!isset($_SESSION['user'])) {
 				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
 				die();
 			} else {
+<<<<<<< HEAD
+			   	echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
+			}*/
+=======
 			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
 			    echo "<script type='text/javascript'>$('#passvalid').css('color','#e77471') //light red
 						.removeClass('fa-check-square')
 						.addClass('fa-exclamation-triangle');</script>";
 			}
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
 		}
 
 		if(isset($_POST['Logout'])) {

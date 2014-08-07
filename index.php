@@ -40,7 +40,10 @@ if (!isset($_SESSION['filterpref'])) {
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
+<<<<<<< HEAD
+=======
     <script src="js/jquery.smoothscroll.js"></script>
+>>>>>>> cd44cb4e60785eb8c3b7183332dae3d57e7d4387
     <style type="text/css">
 
     </style>
