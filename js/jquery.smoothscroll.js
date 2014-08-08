@@ -425,10 +425,31 @@ jQuery(document).ready(function($){
         return ssc_pulse_(x);
     }
 
-    /*$.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
-    if ( $.browser.chrome ) {
+    //$.browser.webkit = /chrome/.test(navigator.userAgent.toLowerCase());
+    if ( browser.chrome ) {
         ssc_addEvent("mousedown", ssc_mousedown);
         ssc_addEvent("mousewheel", ssc_wheel);
         ssc_addEvent("load", ssc_init);
-    }*/
+    }
 });
+
+//added this because $.browser is deprecated
+var browser = {
+        chrome: false,
+        mozilla: false,
+        opera: false,
+        msie: false,
+        safari: false
+    };
+    var sUsrAg = navigator.userAgent;
+    if(sUsrAg.indexOf("Chrome") > -1) {
+        browser.chrome = true;
+    } else if (sUsrAg.indexOf("Safari") > -1) {
+        browser.safari = true;
+    } else if (sUsrAg.indexOf("Opera") > -1) {
+        browser.opera = true;
+    } else if (sUsrAg.indexOf("Firefox") > -1) {
+        browser.mozilla = true;
+    } else if (sUsrAg.indexOf("MSIE") > -1) {
+        browser.msie = true;
+    }

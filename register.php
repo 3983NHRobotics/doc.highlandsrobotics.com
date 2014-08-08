@@ -101,6 +101,10 @@ if(!isset($_SESSION['user'])) {
 		height: 28px;
 		float: left;
 	}
+	select {
+		background: rgba(0,0,0,.15);
+		border: #000 1px solid;
+	}
     </style>
 
   </head>

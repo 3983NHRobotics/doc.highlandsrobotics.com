@@ -27,17 +27,15 @@ error_reporting(0);//remove for debug
     		echo '<script src="js/pace/pace.min.js"></script>';
     	}
     ?>
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
 
 	<link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Font Awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
-	
-<!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
 
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
     <script src="js/jquery.smoothscroll.js"></script>
@@ -66,9 +64,9 @@ error_reporting(0);//remove for debug
 						<span class="header-content">
 							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
-							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
@@ -99,7 +97,7 @@ error_reporting(0);//remove for debug
 						<span class="header-content">
 							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
@@ -168,6 +166,7 @@ error_reporting(0);//remove for debug
 			?>
 
 			<i class="fa fa-gear fa-spin userinfo-working"></i>
+			<span class="userinfo-footer">A relog is required for changes to take effect.</span>
 			
 		</section>
 	</section>
@@ -218,29 +217,28 @@ error_reporting(0);//remove for debug
 		$('textarea#bio').css('width', $('input.userinfo-username-edit').css('width'));
 	});
 
-	function updateDelModal(pid) {
-		//$('#delSubBtn').attr('onClick', '$("#delpost' + pid + '").submit()');
-		//$('#delSubBtn').attr('onClick', 'document.getElementById("delpost' + pid + '").submit(); console.log(\'boop\')');
-		$('#delSubBtn').attr('onClick', 'document.getElementById("delpost' + pid + '").submit()');
-		$('#delModal').modal();
-	}
 
 	function recordName() {
+		$('.userinfo-working').css('visibility','visible');
+		$('input.userinfo-username-edit').css('background','#f3e5ab');
 		currentName = $('input.userinfo-username-edit').val();
 		console.log("recorded name " + currentName);
 	}
 	function recordBio() {
+		$('.userinfo-working').css('visibility','visible');
+		$('textarea#bio').css('background','#f3e5ab');
 		currentBio = $('textarea#bio').val();
 		console.log("recorded bio " + currentBio);
 	}
 
 	function updateName() {
-		$('.userinfo-working').css('visibility','visible');
+		//$('.userinfo-working').css('visibility','visible');
 		var udname = $('input.userinfo-username-edit').val();
 		if (udname != currentName) {
 			$.post("dbquery.php", { udname: udname }, function(result){
 		 		if (result == 1) {
 		 			console.log('username update successful');
+		 			$('.userinfo-footer').css('visibility','visible');
 		 		} else {
 		 			console.log('username update failed');
 		 		}
@@ -250,15 +248,17 @@ error_reporting(0);//remove for debug
 			console.log("name not changed");
 	 		$('.userinfo-working').css('visibility','hidden');	
 		}
+		$('input.userinfo-username-edit').css('background','rgba(0,0,0,0)');
 	}
 
 	function updateBio() {
-		$('.userinfo-working').css('visibility','visible');
+		//$('.userinfo-working').css('visibility','visible');
 		var udbio = $('textarea#bio').val();
 		if (udbio != currentBio) {
 			$.post("dbquery.php", { udbio: udbio }, function(result){
 		 		if (result == 1) {
 		 			console.log('bio update successful');
+		 			$('.userinfo-footer').css('visibility','visible');
 		 		} else {
 		 			console.log('bio update failed');
 		 		}
@@ -268,7 +268,7 @@ error_reporting(0);//remove for debug
 			console.log("bio " + currentBio + " not changed");
 			$('.userinfo-working').css('visibility','hidden');
 		}
-
+		$('textarea#bio').css('background','rgba(0,0,0,0)');
 	}
 
 	</script>

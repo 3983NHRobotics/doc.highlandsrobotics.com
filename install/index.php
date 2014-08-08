@@ -173,7 +173,7 @@ $dbname = "' . $_POST['dbname'] . '";
       <input class="loginpage-content" name="dbname" type="text" id="dbname"> 
   </p>
     <p>
-      <button class="btn btn-submit" type="submit" name="Submit" value="Install">Installe</button>
+      <button class="btn btn-submit" type="submit" name="Submit" value="Install">Install</button>
     </p>
   </form>
 </div>

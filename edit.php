@@ -82,8 +82,8 @@ if(!isset($_SESSION['user'])) {
 			}
 
 			if(isset($_POST['Edit'])) {
-				$newtitle = $_POST['title'];
-				$newcontent = $_POST['content'];
+				$newtitle = addslashes($_POST['title']);
+				$newcontent = addslashes($_POST['content']);
 				$postid = $_POST['postid'];
 
 				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
@@ -126,7 +126,7 @@ if(!isset($_SESSION['user'])) {
 
 			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
 
-			<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
+			<p><textarea class="editpage-content" name="content" id="content" rows="18" cols="60" placeholder="Write stuffs here"></textarea>
 
 			<p><input type="hidden" value="hi" name="tags">
 
@@ -134,43 +134,35 @@ if(!isset($_SESSION['user'])) {
 
 			</form>
 
-<?php 		} else if ($_GET['action'] === 'edit') { ?>
-
-			<form action="" method="post" name="Edit" id="edit">
-
-			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
-
-			<p><textarea class="editpage-content" name="content" id="content" rows="6" cols="60" placeholder="Write stuffs here"></textarea>
-
-			<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
-
-			</form>
-
-<?php 		} 
+<?php 		} else if ($_GET['action'] === 'edit') { 
 
 			if(isset($_POST['Entereditcontent'])) {
 				$postid = $_POST['postid'];
 
-				echo '<script language="javascript">$("form#edit").prepend("<input type=\"hidden\" name=\"postid\" value=\"' . $postid . '\">");</script>';
+				//echo '<script language="javascript">$("form#edit").prepend("<input type=\"hidden\" name=\"postid\" value=\"' . $postid . '\">");</script>';
 
 		        $body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
 
 		        while($row = mysqli_fetch_array($body)) {
-			    	/*echo '<div class="blag-body">
-					<h3>' . $row['title'] . '</h3>
-					<p>' . $row['content'] . '</p>
-					<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>
-				  	</div>';*/
 				  	?>
-				  	<script type="text/javascript">updateForm("<?php echo $row['title']; ?>", "<?php echo $row['content']; ?>");
-				  	</script>
+				  	<!--<script type="text/javascript">updateForm("<?php echo $row['title']; ?>", "<?php echo $row['content']; ?>");
+				  	</script>-->
+				  	<form action="" method="post" name="Edit" id="edit">
+				  	<input type="hidden" name="postid" value="<?php echo $postid; ?>">
+
+					<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title" value="<?php echo $row['title']; ?>">
+
+					<p><textarea class="editpage-content" name="content" id="content" rows="18" cols="60" placeholder="Write stuffs here"><?php echo $row['content']; ?></textarea>
+
+					<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
+
+					</form>
 				  	<?php
-
 				}
-
 			}
+		} 
 
-?>
+		?>
 </div>
 
 	<form action="login.php" method="post" name="logout" id="logout">
@@ -192,6 +184,10 @@ if(!isset($_SESSION['user'])) {
 	        	],
 	        	toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 	        });
+
+			setTimeout(function() {
+				tinymce.get('content').dom.loadCSS('css/blag-light-tinymce.css');
+			}, 500); //delay while tinymce loads
 	</script>
 	<?php 
 		

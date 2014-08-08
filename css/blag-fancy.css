@@ -19,7 +19,16 @@
 	}
 
 body {
-    background: #fff;
+    /*background: #fff;*/
+    /*background: url('http://fc07.deviantart.net/fs70/f/2014/219/5/7/mountain_paradise_by_afoxen-d7u2kd2.jpg');*/
+    background: url('http://fc09.deviantart.net/fs71/f/2013/203/2/a/day_s_end_by_xellojel-d6ent0x.jpg');
+    -webkit-background-size: 100% 100%;
+		-moz-background-size: 100% 100%;
+		-o-background-size: 100% 100%;
+		-ms-background-size: 100% 100%;
+		background-size: 100% 100%;
+		background-repeat:no-repeat;
+		background-attachment:fixed;
 
     line-height: 100%;
       display: block;
@@ -34,20 +43,20 @@ body {
 		width: 90%;
 		margin: 30px auto 10px auto;
 		padding: 20px;
-		background: rgba(0,0,0,.15);
+		background: rgba(255,255,255,.45);
 		border-radius: 10px;
-		border: rgba(0,0,0,.25) 1px solid;
-		-webkit-box-shadow: 15px 15px 30px 5px #ccc;
+		border: rgba(255,255,255,.25) 1px solid;
+		/*-webkit-box-shadow: 15px 15px 30px 5px #ccc;*/
 	}
 	.userinfo {
 		position: relative;
 		width: 90%;
 		height: 45%;
 		padding: 20px;
-		background: rgba(0,0,0,.15);
+		background: rgba(255,255,255,.45);
 		margin: 10% auto 20px auto;
 		border-radius: 10px;
-		-webkit-box-shadow: 15px 15px 30px 5px #ccc;
+		/*-webkit-box-shadow: 15px 15px 30px 5px #ccc;*/
 	}
 }
 
@@ -58,20 +67,20 @@ body {
 		max-width: 1000px;
 		margin: 30px auto 10px auto;
 		padding: 20px;
-		background: rgba(0,0,0,.15);
+		background: rgba(255,255,255,.45);
 		border-radius: 10px;
-		border: rgba(0,0,0,.25) 1px solid;
-		-webkit-box-shadow: 15px 15px 30px 5px #ccc;
+		border: rgba(255,255,255,.25) 1px solid;
+		/*-webkit-box-shadow: 15px 15px 30px 5px #ccc;*/
 	}
 	.userinfo {
 		position: relative;
 		width: 50%;
 		height: 45%;
 		padding: 20px;
-		background: rgba(0,0,0,.15);
+		background: rgba(255,255,255,.45);
 		margin: 10% auto 20px auto;
 		border-radius: 10px;
-		-webkit-box-shadow: 15px 15px 30px 5px #ccc;
+		/*-webkit-box-shadow: 15px 15px 30px 5px #ccc;*/
 	}
 }
 
@@ -139,6 +148,7 @@ body {
 }
 
 .header, .header-admin {
+	background: rgba(255,255,255,.6);
   line-height: 30px;
   top: 25px;
   border-bottom-style: solid;
@@ -246,6 +256,8 @@ body {
 		width: 100%;
 		position: relative;
 		margin: 3px auto 15px auto;
+		background: rgba(0,0,0,.15);
+		border: #000 1px solid;
 	}
 	.loginpage-title {
 		width: 100%;

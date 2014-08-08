@@ -38,9 +38,6 @@ if(!isset($_SESSION['user'])) {
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
 
-    <?php
-    	include_once('/includes/paths.php');
-    ?>
   </head>
 <body>
 
@@ -52,7 +49,7 @@ if(!isset($_SESSION['user'])) {
 						<span class="header-content">
 							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
 							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
@@ -64,42 +61,10 @@ if(!isset($_SESSION['user'])) {
 
 	if ($_SESSION['mode'] === 'admin') {
 
-		
-		$file = 'pages/posts.json';
-
-		$json = file_get_contents($file);
-
-	    if (!isset($_GET['p'])) {
-	    	$pageiterator = 0;
-	    	$pagenumber = 1;
-	    }
-
-		if (isset($_GET['p'])) {
-			$pagenumber = (int)$_GET['p'];
-			$pageiterator = (int)$_GET['p'];
-		}
 
 		echo '<div class="posts-container-admin">';
 
 		echo '</div>';
-
-		/*if(isset($_POST["delete"])) {
-
-			//echo "</li><li class='blag-body-admin'>" . $title or exit ("FAIL");
-			$title = $_POST['title'];
-			$array = json_decode($json, TRUE);
-
-			foreach ($array as $key => $val) {
-				if ($key == 'title') {
-				    if ($val == $title) {
-				        unset($array[$key]);
-				    }
-				}
-			}
-
-			file_put_contents($file, json_encode($array));
-
-		}*/ 
 
 		if(isset($_POST['savesettings'])) {
 
@@ -156,7 +121,7 @@ if(!isset($_SESSION['user'])) {
 <!-- Stylesheet settings -->
 		<ul style="margin-left: -25px;">
 		<li><input class="acc-radio" type="radio" name="theme" value="light" size="17" <?php echo ($theme=='light')?'checked':'' ?>><span class="acc-content">Light stylesheet</span>
-		<li><input class="acc-radio" type="radio" name="theme" value="gray" size="17" <?php echo ($theme=='gray')?'checked':'' ?>><span class="acc-content">Gray stylesheet</span>
+		<li><input class="acc-radio" type="radio" name="theme" value="fancy" size="17" <?php echo ($theme=='fancy')?'checked':'' ?>><span class="acc-content">Fancy stylesheet</span>
 		<li><input class="acc-radio" type="radio" name="theme" value="dark" size="17" <?php echo ($theme=='dark')?'checked':'' ?>><span class="acc-content">Dark stylesheet</span>
 		<li><input class="acc-radio" type="radio" name="theme" value="custom" size="17" <?php echo ($theme=='custom')?'checked':'' ?>><span class="acc-content">Custom stylesheet</span>
 		</ul>
@@ -164,7 +129,7 @@ if(!isset($_SESSION['user'])) {
 		</div>
 
 		<div class="admin-control admin-control-settings-includes">
-		<div class="ac-title">Main settings:</div>
+		<div class="ac-title">Include-y stuff:</div>
 <!-- Main site settings -->
 		<ul style="margin-left: -25px;">
 		<li><input class="acc-checkbox" type="checkbox" name="usetinymce" value="true" size="17" <?php echo ($usetinymce=='true')?'checked':'' ?>><span class="acc-content">Use TinyMCE for edit page?</span>

@@ -11,7 +11,7 @@ if(!isset($_SESSION['user'])) {
 if (!isset($_SESSION['filterpref'])) {
 	$filterPref = 1;
 }
-//error_reporting(0);//remove for debug
+error_reporting(0);//remove for debug
 ?>
 
 <!DOCTYPE html>

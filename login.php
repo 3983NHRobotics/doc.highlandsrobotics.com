@@ -18,7 +18,6 @@ if(!isset($_SESSION['user'])) {
   <head>
     <title>Blag Test</title>
     <?php
-    	include('/includes/paths.php');
     	require ('/includes/config.php');
 
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
@@ -150,7 +149,7 @@ if(!isset($_SESSION['user'])) {
 			$passwordFromPost = $_POST['upasssub'];
 			$hashedPasswordFromDB = $row['pass'];
 			$mode = $row['isAdmin'];
-			echo "<script type='text/javascript'>console.log('" . $mode . "');</script>";
+			//echo "<script type='text/javascript'>console.log('" . $mode . "');</script>";
 
 			if (password_verify($passwordFromPost, $hashedPasswordFromDB)) {
 				echo "<script type='text/javascript'>$('#passvalid').css('color','#99c68e') //light green
@@ -168,7 +167,7 @@ if(!isset($_SESSION['user'])) {
 				$_SESSION['filterPref'] = $row['filterPref'];
 				checkMode('login');
 				//sleep(1); //pointless
-				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				header('Location: ' . dirname($_SERVER['PHP_SELF']));
 				die();
 			} else {
 			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";

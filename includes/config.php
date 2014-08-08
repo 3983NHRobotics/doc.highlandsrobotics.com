@@ -1,8 +1,8 @@
 <?php
-			$theme = "light";
+			$theme = "fancy";
 			$title = "The Blag";
 			$greeting = "The Blag";
-			$greetingContent = "Welcome to Blag.";
+			$greetingContent = "Hello world!";
 			$usetinymce = "true";
 			$usepace = "false";
 			?>
