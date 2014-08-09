@@ -118,6 +118,16 @@ if(!isset($_SESSION['user'])) {
 		
 		require('includes/user.php');
 
+		function strip_tags_attributes( $str, 
+		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
+		    $disabledEvents = array('onclick','ondblclick','onkeydown','onkeypress','onkeyup','onload','onmousedown','onmousemove','onmouseout','onmouseover','onmouseup','onunload') )
+		{       
+		    if( empty($disabledEvents) ) {
+		        return strip_tags($str, implode('', $allowedTags));
+		    }
+		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
+		}
+
 		function checkMode($type) {
 
 			global $unamesub;
@@ -195,8 +205,8 @@ if(!isset($_SESSION['user'])) {
         }
 
 		if(isset($_POST['Register'])) {
-			$unamesub = addslashes($_POST['unamesub']);
-			$uemailsub = addslashes($_POST['uemailsub']);
+			$unamesub = addslashes(strip_tags_attributes($_POST['unamesub']));
+			$uemailsub = addslashes(strip_tags_attributes($_POST['uemailsub']));
 			$uage = $_POST['dateyear'] . '-' . $_POST['datemonth'] . '-' . $_POST['dateday'];
 
 			if ($_POST['upasssub'] != $_POST['upasssub2']) {
@@ -207,7 +217,7 @@ if(!isset($_SESSION['user'])) {
 	                'cost' => 11,
 	            ];
 
-	            $upass = password_hash(addslashes($_POST['upasssub']), PASSWORD_BCRYPT, $options);
+	            $upass = password_hash(addslashes(strip_tags_attributes($_POST['upasssub'])), PASSWORD_BCRYPT, $options);
 	            //$upass = SHA2($_POST['upass'], 512);
 	            $default = 'not set';
 

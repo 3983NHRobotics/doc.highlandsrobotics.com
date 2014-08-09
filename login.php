@@ -64,6 +64,16 @@ if(!isset($_SESSION['user'])) {
 		
 		require('includes/user.php');
 
+		function strip_tags_attributes( $str, 
+		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
+		    $disabledEvents = array('onclick','ondblclick','onkeydown','onkeypress','onkeyup','onload','onmousedown','onmousemove','onmouseout','onmouseover','onmouseup','onunload') )
+		{       
+		    if( empty($disabledEvents) ) {
+		        return strip_tags($str, implode('', $allowedTags));
+		    }
+		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
+		}
+
 		function checkMode($type) {
 
 			global $unamesub;
@@ -140,8 +150,8 @@ if(!isset($_SESSION['user'])) {
         }
 
 		if(isset($_POST['Login'])) {
-			$unamesub = addslashes($_POST['unamesub']);
-			$upassSHA = addslashes($_POST['upasssub']);
+			$unamesub = addslashes(strip_tags_attributes($_POST['unamesub']));
+			$upassSHA = addslashes(strip_tags_attributes($_POST['upasssub']));
 
 			$user = mysqli_query($db,"SELECT * FROM Users WHERE name='$unamesub'");
 			$row = mysqli_fetch_array($user);

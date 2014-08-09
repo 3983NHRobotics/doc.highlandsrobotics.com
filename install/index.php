@@ -101,7 +101,7 @@ $dbname = "' . $_POST['dbname'] . '";
             $sql = 'CREATE TABLE Posts(
                 PID INT NOT NULL AUTO_INCREMENT, 
                 PRIMARY KEY(PID),
-                title VARCHAR(50), 
+                title VARCHAR(60), 
                 content TEXT,
                 creator VARCHAR(150),
                 timestamp VARCHAR(30),

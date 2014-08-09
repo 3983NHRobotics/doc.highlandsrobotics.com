@@ -40,7 +40,12 @@ error_reporting(0);//remove for debug
     <script src="js/blag.js"></script>
     <script src="js/jquery.smoothscroll.js"></script>
     <style type="text/css">
-
+    	.form-halfwidth {
+	    	width: 50%;
+	    	height: auto;
+	    	float: left;
+	    	position: relative;
+	    }
     </style>
   </head>
 <body>
@@ -157,6 +162,17 @@ error_reporting(0);//remove for debug
 			<?php }
 				if ($_SESSION['user'] === $user) { ?>
 				<p><textarea class="userinfo-edit userinfo-editable" name="content" id="bio" placeholder="Write a little about yourself!" onFocus="recordBio()" onBlur="updateBio()"><?php echo $bio ?></textarea></p>
+
+				<!-- <div class="form-halfwidth">
+							<label class="loginpage-content-title" for="upass" id="passlab"><i class="fa fa-unlock-alt"></i> Password*</label>
+						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password" required >
+						    <i class="fa fa-check-square upass-val" id="passvalid"></i>
+						    </div>
+						    <div class="form-halfwidth">
+						    <label class="loginpage-content-title" for="upass2" id="passlab2"><i class="fa fa-unlock-alt"></i> Repeat password*</label>
+						    <input class="loginpage-content" name="upasssub2" type="password" id="upass2" placeholder=" Password" required >
+						    <i class="fa fa-check-square upass-val" id="passvalid2"></i>
+						    </div> -->
 			<?php 
 			} else { 
 				echo '<p class="userinfo-bio">';
@@ -258,7 +274,7 @@ error_reporting(0);//remove for debug
 			$.post("dbquery.php", { udbio: udbio }, function(result){
 		 		if (result == 1) {
 		 			console.log('bio update successful');
-		 			$('.userinfo-footer').css('visibility','visible');
+		 			//$('.userinfo-footer').css('visibility','visible');
 		 		} else {
 		 			console.log('bio update failed');
 		 		}

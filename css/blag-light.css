@@ -17,6 +17,7 @@
 	.blag-body img {
 		height: auto;
 	}
+	a.reg {color: #c04000 !important}
 
 body {
     background: #fff;
@@ -370,8 +371,10 @@ hr {
 	cursor: pointer;
 }
 .userinfo-right {
-	float: left;
-	width: 70%;
+	float: right;
+	margin-right: 20px;
+	position: absolute;
+	width: 50%;
 }
 .userinfo-userpic {
 	position: relative;
