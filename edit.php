@@ -46,6 +46,17 @@ if(!isset($_SESSION['user'])) {
 	</div>
 
 	<?php
+	#   Sanitizer function - removes forbidden tags, including script tags
+		function strip_tags_attributes( $str, 
+		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
+		    $disabledEvents = array('onclick','ondblclick','onkeydown','onkeypress','onkeyup','onload','onmousedown','onmousemove','onmouseout','onmouseover','onmouseup','onunload') )
+		{       
+		    if( empty($disabledEvents) ) {
+		        return strip_tags($str, implode('', $allowedTags));
+		    }
+		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
+		}
+
 		if($_SESSION['mode'] === 'admin') {
 			$postid = 0;
 
@@ -57,12 +68,13 @@ if(!isset($_SESSION['user'])) {
 
 			if(isset($_POST["Submit"])) {
 				//Change this so that apostraphes and stuff can be used
-				$title = addslashes($_POST["title"]);
-				$content = addslashes($_POST["content"]);
+				$title = addslashes(strip_tags_attributes($_POST["title"]));
+				//$title = addslashes($_POST["title"]);
+				$content = addslashes(strip_tags_attributes($_POST["content"]));
 				$creator = '<a href="user.php?u=' . $_SESSION['user'] . '">' . $_SESSION['username'] . '</a>';
 				date_default_timezone_set('America/New_York');
 				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
-				$tags = addslashes($_POST['tags']);
+				$tags = addslashes(strip_tags_attributes($_POST['tags']));
 
 		        $sql = "INSERT INTO Posts (title, content, creator, timestamp, tags)
                     VALUES ('$title', 
@@ -82,8 +94,8 @@ if(!isset($_SESSION['user'])) {
 			}
 
 			if(isset($_POST['Edit'])) {
-				$newtitle = addslashes($_POST['title']);
-				$newcontent = addslashes($_POST['content']);
+				$newtitle = addslashes(strip_tags_attributes($_POST['title']));
+				$newcontent = addslashes(strip_tags_attributes($_POST['content']));
 				$postid = $_POST['postid'];
 
 				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);

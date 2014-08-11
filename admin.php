@@ -77,12 +77,12 @@ if(!isset($_SESSION['user'])) {
 
 			$settings = '<?php
 			$theme = "' . $_POST['theme'] . '";
-			$title = "' . $_POST['sitename'] . '";
-			$greeting = "' . $_POST['sitegreeting'] . '";
-			$greetingContent = "' . $_POST['sitegreeting-content'] . '";
+			$title = "' . addslashes($_POST['sitename']) . '";
+			$greeting = "' . addslashes($_POST['sitegreeting']) . '";
+			$greetingContent = "' . addslashes($_POST['sitegreeting-content']) . '";
 			$usetinymce = "' . $_POST['usetinymce'] . '";
 			$usepace = "' . $_POST['usepace'] . '";
-			?>';
+			';
 
 			$fp = fopen("includes/config.php", "w");
         	fwrite($fp, $settings);

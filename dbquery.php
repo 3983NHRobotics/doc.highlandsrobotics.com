@@ -4,9 +4,19 @@ require('includes/user.php');
 //connect to database  
 $db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
 
+function strip_tags_attributes( $str, 
+		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
+		    $disabledEvents = array('onclick','ondblclick','onkeydown','onkeypress','onkeyup','onload','onmousedown','onmousemove','onmouseout','onmouseover','onmouseup','onunload') )
+		{       
+		    if( empty($disabledEvents) ) {
+		        return strip_tags($str, implode('', $allowedTags));
+		    }
+		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
+		}
+
 if(isset($_POST['username'])) {
 
-	$username = addslashes($_POST['username']);  
+	$username = addslashes(strip_tags_attributes($_POST['username']));  
 	 
 	$result = mysqli_query($db, "SELECT NAME from USERS where NAME = '". $username . "'");  
 	  
@@ -19,7 +29,7 @@ if(isset($_POST['username'])) {
 }
 
 if(isset($_POST['udname'])) {
-	$udname = addslashes($_POST['udname']);
+	$udname = addslashes(strip_tags_attributes($_POST['udname']));
 	$user = $_SESSION['user'];
 
 	if (mysqli_query($db, "UPDATE USERS SET disname='$udname' WHERE name='$user'")) {
@@ -30,7 +40,7 @@ if(isset($_POST['udname'])) {
 }
 
 if(isset($_POST['udbio'])) {
-	$udbio = addslashes($_POST['udbio']);
+	$udbio = addslashes(strip_tags_attributes($_POST['udbio']));
 	$user = $_SESSION['user'];
 	$sql = "UPDATE Users SET bio='$udbio' WHERE name='$user'";
 
