@@ -62,7 +62,7 @@ $dbname = "' . $_POST['dbname'] . '";
                 email VARCHAR(50),
                 disname VARCHAR(50),
                 bio TEXT,
-                age INT,
+                age TINYTEXT,
                 isAdmin TINYINT,
                 filterPref TINYINT)';
             $age = htmlentities($_POST['uage']);
@@ -73,11 +73,11 @@ $dbname = "' . $_POST['dbname'] . '";
 
             $upass = password_hash(addslashes($_POST['upass']), PASSWORD_BCRYPT, $options);
             //$upass = sha2($_POST['upass'], 512);
-            $default = 'not set';
+            $default = "not set";
 
             // Execute query
             if (mysqli_query($db,$sql)) {
-              echo "Table Users created successfully";
+              echo "Table Users created successfully<br>";
             } else {
               echo "Error creating table: " . mysqli_error($db);
             }
@@ -88,7 +88,6 @@ $dbname = "' . $_POST['dbname'] . '";
                     '$default',
                     '$default',
                     '$default',
-                    '$default';
                     '$default',
                     '1',
                     '1')";
@@ -115,7 +114,7 @@ $dbname = "' . $_POST['dbname'] . '";
 
             // Execute query
             if (mysqli_query($db,$sql)) {
-              echo "Table Posts created successfully";
+              echo "Table Posts created successfully<br>";
             } else {
               echo "Error creating table: " . mysqli_error($db);
             }
