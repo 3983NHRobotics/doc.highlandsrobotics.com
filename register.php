@@ -16,7 +16,7 @@ if(!isset($_SESSION['user'])) {
   <head>
     <title>Blag Test</title>
     <?php
-
+    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -34,7 +34,13 @@ if(!isset($_SESSION['user'])) {
 	
 <!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
 
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <?php 
+	if($localcode) {
+    echo '<script src="js/jquery.min.js"></script>';
+	} else {
+    echo '<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>';
+	}
+	?>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
 
@@ -145,7 +151,7 @@ if(!isset($_SESSION['user'])) {
 					</script>
 					<div class="header">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" class="btn-unlock" data-toggle="modal" data-target="#myModal"><i class="fa fa-unlock-alt"></i></a>
 						</span>
 					</div>
@@ -157,22 +163,22 @@ if(!isset($_SESSION['user'])) {
 				      		<p class="loginpage-title"><?php echo $title; ?></p>
 							
 							<label class="loginpage-content-title" for="uname"><i class="fa fa-user"></i> Username*</label>
-						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="<?php if(isset($_POST['unamesub'])) { echo ($_POST['unamesub']);} ?>" placeholder=" Username" required onBlur="check_availability()">
+						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="<?php if(isset($_POST['unamesub'])) { echo ($_POST['unamesub']);} ?>" placeholder="Username" required onBlur="check_availability()">
 						    <i class="fa fa-check-square uname-val" id="namevalid"></i>
 						
 						    <div class="form-halfwidth">
 							<label class="loginpage-content-title" for="upass" id="passlab"><i class="fa fa-unlock-alt"></i> Password*</label>
-						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password" required >
+						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder="Password" required >
 						    <i class="fa fa-check-square upass-val" id="passvalid"></i>
 						    </div>
 						    <div class="form-halfwidth">
 						    <label class="loginpage-content-title" for="upass2" id="passlab2"><i class="fa fa-unlock-alt"></i> Repeat password*</label>
-						    <input class="loginpage-content" name="upasssub2" type="password" id="upass2" placeholder=" Password" required >
+						    <input class="loginpage-content" name="upasssub2" type="password" id="upass2" placeholder="Password" required >
 						    <i class="fa fa-check-square upass-val" id="passvalid2"></i>
 						    </div>
 
 						    <label class="loginpage-content-title" for="uemail"><i class="fa fa-envelope"></i> Email*</label>
-						    <input class="loginpage-content" name="uemailsub" type="text" id="uemail" value="<?php if(isset($_POST['uemailsub'])) {echo ($_POST['uemailsub']);}?>" placeholder=" Email address" required>
+						    <input class="loginpage-content" name="uemailsub" type="text" id="uemail" value="<?php if(isset($_POST['uemailsub'])) {echo ($_POST['uemailsub']);}?>" placeholder="Email address" required>
 
 						    <label class="loginpage-content-title" for="monthselect"><i class="fa fa-certificate"></i> Birthdate*</label><br>
 						    <select id="monthselect" class="agesel" name="datemonth" required>	
@@ -254,10 +260,10 @@ if(!isset($_SESSION['user'])) {
 		      </div>
 		      <div class="modal-body">
 				    <p>
-				      <input class="editpage-content" name="unamesub" type="text" id="uname" value="" placeholder=" Username"> 
+				      <input class="editpage-content" name="unamesub" type="text" id="uname" value="" placeholder="Username"> 
 				  </p>
 				    <p>
-				      <input class="editpage-content" name="upasssub" type="password" id="upass" placeholder=" Password"> 
+				      <input class="editpage-content" name="upasssub" type="password" id="upass" placeholder="Password"> 
 				  </p>
 				  <!-- <input type="submit" name="Login" value="Login"> -->
 		      </div>

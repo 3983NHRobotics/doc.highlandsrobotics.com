@@ -19,7 +19,7 @@ error_reporting(0);//remove for debug
   <head>
     <title>Blag Test</title>
     <?php
-
+    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -37,7 +37,13 @@ error_reporting(0);//remove for debug
 	
 <!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
 
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+<?php 
+	if($localcode) {
+    echo '<script src="js/jquery.min.js"></script>';
+	} else {
+    echo '<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>';
+	}
+	?>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
     <script src="js/jquery.smoothscroll.js"></script>
@@ -64,11 +70,11 @@ error_reporting(0);//remove for debug
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
-							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="admin/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
@@ -83,7 +89,7 @@ error_reporting(0);//remove for debug
 					</script>
 					<div class="header">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" class="btn-unlock" data-toggle="modal" data-target="#myModal"><i class="fa fa-unlock-alt"></i></a>
 						</span>
 					</div>
@@ -97,9 +103,9 @@ error_reporting(0);//remove for debug
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
@@ -120,7 +126,7 @@ error_reporting(0);//remove for debug
 		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
 		if (!empty($_GET['p'])) {
-			$pagenumber = $_GET['p'];
+			$pagenumber = mysqli_real_escape_string($db, $_GET['p']);
 		} else {
 			$_GET['p'] = '1';
 			$pagenumber = '1';

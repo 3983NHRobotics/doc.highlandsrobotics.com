@@ -17,7 +17,7 @@ if(!isset($_SESSION['user'])) {
         <?php
     	require ('/includes/config.php');
     	require('/includes/user.php');
-
+    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -34,8 +34,13 @@ if(!isset($_SESSION['user'])) {
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	
 <!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
-
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+<?php 
+	if($localcode) {
+    echo '<script src="js/jquery.min.js"></script>';
+	} else {
+    echo '<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>';
+	}
+	?>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
   </head>
@@ -122,7 +127,7 @@ if(!isset($_SESSION['user'])) {
 							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
-							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="/blag/admin/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
 							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>

@@ -63,4 +63,36 @@ if(isset($_POST['deletepost'])) {
 	}
 }
 
+if(isset($_POST['newpass'])) {
+	$newpass = addslashes(strip_tags_attributes($_POST['newpass']));
+	$newpassconf = addslashes(strip_tags_attributes($_POST['newpassconf']));
+	$user = $_SESSION['user'];
+	if ($newpass === $newpassconf) {
+		$options = [
+	                'cost' => 11,
+	            ];
+		$passtoset = password_hash($newpass, PASSWORD_BCRYPT, $options);
+		$sql = "UPDATE users SET pass='$passtoset' WHERE name='$user'";
+		if (mysqli_query($db, $sql)) {
+			echo 1;
+		} else {
+			echo 0;
+		}
+	} else {
+		echo 0;
+	}
+}
+
+if(isset($_POST['newemail'])) {
+	$newemail = addslashes(strip_tags_attributes($_POST['newemail']));
+	$user = $_SESSION['user'];
+
+	$sql = "UPDATE users SET email='$newemail' WHERE name='$user'";
+	if (mysqli_query($db, $sql)) {
+		echo 1;
+	} else {
+		echo 0;
+	}
+}
+
 //echo $_SESSION['mode'];

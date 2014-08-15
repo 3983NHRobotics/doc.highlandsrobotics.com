@@ -36,7 +36,7 @@ $dbhost = "' . $_POST['dbhost'] . '";
 
 $dbname = "' . $_POST['dbname'] . '";
 
-//$installed = true;
+$installed = true;
 
 ?>';
 

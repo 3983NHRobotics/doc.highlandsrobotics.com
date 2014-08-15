@@ -16,7 +16,7 @@ $filterPref = $_SESSION['filterPref'];
   <head>
     <title>Blag Test</title>
     <?php
-
+    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -73,11 +73,11 @@ $filterPref = $_SESSION['filterPref'];
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.html" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php" class="btn btn-random"><i class="fa fa-user"></i></a>
-							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="admin/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
@@ -92,7 +92,7 @@ $filterPref = $_SESSION['filterPref'];
 					</script>
 					<div class="header">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.html" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" class="btn-unlock" data-toggle="modal" data-target="#myModal"><i class="fa fa-unlock-alt"></i></a>
 						</span>
 					</div>
@@ -106,8 +106,8 @@ $filterPref = $_SESSION['filterPref'];
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
-							<a href="/blag/user.php" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="index.html" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>

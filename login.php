@@ -19,7 +19,7 @@ if(!isset($_SESSION['user'])) {
     <title>Blag Test</title>
     <?php
     	require ('/includes/config.php');
-
+    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -37,7 +37,13 @@ if(!isset($_SESSION['user'])) {
 	
 <!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
 
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  	<?php 
+	if($localcode) {
+    echo '<script src="js/jquery.min.js"></script>';
+	} else {
+    echo '<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>';
+	}
+	?>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
     <script src="js/blag_parser.js"></script>
@@ -88,11 +94,11 @@ if(!isset($_SESSION['user'])) {
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
-							<a href="/blag/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="admin/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>
@@ -119,11 +125,11 @@ if(!isset($_SESSION['user'])) {
 				      		<p class="loginpage-title"><?php echo $title; ?></p>
 							
 							<label class="loginpage-content-title" for="uname"><i class="fa fa-user"></i> Username</label>
-						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="" placeholder=" Username" onBlur="check_availability()">
+						    <input class="loginpage-content" name="unamesub" type="text" id="uname" value="" placeholder="Username" onBlur="check_availability()">
 						    <i class="fa fa-check-square uname-val" id="namevalid"></i>
 						
 							<label class="loginpage-content-title" for="upass"><i class="fa fa-unlock-alt"></i> Password</label>
-						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder=" Password">
+						    <input class="loginpage-content" name="upasssub" type="password" id="upass" placeholder="Password">
 						    <i class="fa fa-check-square uname-val" id="passvalid"></i>
 
 				        <button type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
@@ -210,10 +216,10 @@ if(!isset($_SESSION['user'])) {
 		      </div>
 		      <div class="modal-body">
 				    <p>
-				      <input class="editpage-content" name="unamesub" type="text" id="uname" value="" placeholder=" Username"> 
+				      <input class="editpage-content" name="unamesub" type="text" id="uname" value="" placeholder="Username"> 
 				  </p>
 				    <p>
-				      <input class="editpage-content" name="upasssub" type="password" id="upass" placeholder=" Password"> 
+				      <input class="editpage-content" name="upasssub" type="password" id="upass" placeholder="Password"> 
 				  </p>
 				  <!-- <input type="submit" name="Login" value="Login"> -->
 		      </div>
