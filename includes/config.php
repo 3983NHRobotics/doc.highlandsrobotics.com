@@ -1,11 +1,16 @@
 <?php
-			$theme = "light";
 			$title = "The Blag";
 			$greeting = "- The Blag -";
-			$greetingContent = "Hello world! Welcome to Blag.";
+			$greetingContent = "<p>Hello world!</p>
+<p>Welcome to Blag.</p>";
+			$theme = "fancy";
 			$usetinymce = "true";
 			$usepace = "false";
-			$localcode = "true";
+			$localcode = "";
 			$grav_default = "retro";
 			$grav_rating = "g";
+			$grav_custom = "https://avatars3.githubusercontent.com/u/4484323?v=2&s=80";
+			$usecustombg = "true";
+			$custombg = "http://i.imgur.com/XvCxlq3.jpg";
+			$showpageloadtime = "";
 			

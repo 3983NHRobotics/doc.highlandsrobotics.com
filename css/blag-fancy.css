@@ -1,18 +1,65 @@
-body {
-    /*background: #fff;*/
-    /*background: url('http://fc07.deviantart.net/fs70/f/2014/219/5/7/mountain_paradise_by_afoxen-d7u2kd2.jpg');*/
-    background: url('http://fc09.deviantart.net/fs71/f/2013/203/2/a/day_s_end_by_xellojel-d6ent0x.jpg');
-    -webkit-background-size: 100% 100%;
-		-moz-background-size: 100% 100%;
-		-o-background-size: 100% 100%;
-		-ms-background-size: 100% 100%;
-		background-size: 100% 100%;
-		background-repeat:no-repeat;
-		background-attachment:fixed;
+  body {
+    /*Use for parallax*/
+      /*-webkit-background-size: 100% auto;
+      -moz-background-size: 100% auto;
+      -o-background-size: 100% auto;
+      -ms-background-size: 100% auto;
+      background-size: 100% auto;*/
+      /*Use for non-parallax*/
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      -ms-background-size: 100% 100%;
+      background-size: 100% 100%;
+      background-repeat:no-repeat;
+      background-attachment:fixed;
 
-    line-height: 100%;
-      display: block;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
+      line-height: 100%;
+        display: block;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+
+.alert-error {
+  background: rgba(255,255,255,.5);
+}
+.header, .header-admin, .admin-control {
+  background: rgba(255,255,255,.6);
+}
+.header a, .header-admin a, .header span, .header-admin span {
+  color: #333;
+}
+.header a:hover, .header-admin a:hover {
+  color: #c04000;
+}
+.loginpage-title {
+  text-shadow: none;
+}
+.blag-body, .userinfo, .blag-reply-body {
+  -webkit-box-shadow: none;
+  background: rgba(255,255,255,.45);
+}
+.btn-submit {
+  background: rgba(255,255,255,.35);
+  color: #444;
+}
+.btn-submit:hover {
+  background: rgba(0,0,0,.35);
+}
+.btn-lock:hover {
+  color: #0f0;
+}
+.btn-unlock:hover {
+  color: #f00;
+}
+.loginpage-content {
+  background: rgba(255,255,255,.45);
+  border: #222 1px solid;
+}
+.tab-links > li > a {
+  background: rgba(255,255,255,.35);
+}
+.tab-links > li > a:hover {
+  background: rgba(255,255,255,.10);
 }

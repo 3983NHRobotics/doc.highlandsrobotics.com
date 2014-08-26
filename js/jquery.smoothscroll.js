@@ -1,3 +1,24 @@
+//added this because $.browser is deprecated
+var browser = {
+        chrome: false,
+        mozilla: false,
+        opera: false,
+        msie: false,
+        safari: false
+    };
+    var sUsrAg = navigator.userAgent;
+    if(sUsrAg.indexOf("Chrome") > -1) {
+        browser.chrome = true;
+    } else if (sUsrAg.indexOf("Safari") > -1) {
+        browser.safari = true;
+    } else if (sUsrAg.indexOf("Opera") > -1) {
+        browser.opera = true;
+    } else if (sUsrAg.indexOf("Firefox") > -1) {
+        browser.mozilla = true;
+    } else if (sUsrAg.indexOf("MSIE") > -1) {
+        browser.msie = true;
+    }
+
 jQuery(document).ready(function($){
 
 // SmoothScroll v0.9.9
@@ -36,6 +57,13 @@ jQuery(document).ready(function($){
     /***********************************************
      * INITIALIZE
      ***********************************************/
+
+    //$.browser.webkit = /chrome/.test(navigator.userAgent.toLowerCase());
+    if ( browser.chrome ) {
+        ssc_addEvent("mousedown", ssc_mousedown);
+        ssc_addEvent("mousewheel", ssc_wheel);
+        ssc_addEvent("load", ssc_init);
+    }
 
     /**
      * Sets up scrolls array, determines if ssc_frames are involved.
@@ -205,7 +233,7 @@ jQuery(document).ready(function($){
     function ssc_wheel(event) {
 
         if (!ssc_initdone) {
-            init();
+            ssc_init(); // changed from init() to ssc_init() because was returning errors while page loaded
         }
 
         var target = event.target;
@@ -424,32 +452,4 @@ jQuery(document).ready(function($){
         }
         return ssc_pulse_(x);
     }
-
-    //$.browser.webkit = /chrome/.test(navigator.userAgent.toLowerCase());
-    if ( browser.chrome ) {
-        ssc_addEvent("mousedown", ssc_mousedown);
-        ssc_addEvent("mousewheel", ssc_wheel);
-        ssc_addEvent("load", ssc_init);
-    }
 });
-
-//added this because $.browser is deprecated
-var browser = {
-        chrome: false,
-        mozilla: false,
-        opera: false,
-        msie: false,
-        safari: false
-    };
-    var sUsrAg = navigator.userAgent;
-    if(sUsrAg.indexOf("Chrome") > -1) {
-        browser.chrome = true;
-    } else if (sUsrAg.indexOf("Safari") > -1) {
-        browser.safari = true;
-    } else if (sUsrAg.indexOf("Opera") > -1) {
-        browser.opera = true;
-    } else if (sUsrAg.indexOf("Firefox") > -1) {
-        browser.mozilla = true;
-    } else if (sUsrAg.indexOf("MSIE") > -1) {
-        browser.msie = true;
-    }

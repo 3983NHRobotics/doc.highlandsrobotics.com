@@ -8,8 +8,10 @@ if (!isset($_SESSION['mode'])) {
 if(!isset($_SESSION['user'])) {
 	$_SESSION['user'] = 'Guest';
 }
-if (!isset($_SESSION['filterpref'])) {
+if (!isset($_SESSION['filterPref'])) {
 	$filterPref = 1;
+} else {
+	$filterPref = $_SESSION['filterPref'];
 }
 //error_reporting(0);//remove for debug
 ?>
@@ -17,9 +19,12 @@ if (!isset($_SESSION['filterpref'])) {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Blag Test</title>
+    <title>The Blag</title>
     <?php
-    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
+    	echo '<link rel="stylesheet" href="css/blag-light.css">';
+    	if ($usecustombg == "true") {
+				echo '<style type="text/css">body{background: url("' . $custombg . '")}</style>';
+			}
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -77,6 +82,9 @@ if (!isset($_SESSION['filterpref'])) {
 	    	margin: 5px 0px 0px -23px;
 	    	font-size: 15px;
 	    	color: rgba(0,0,0,0);
+	    }
+	    .mce-tinymce {
+	    	margin-left: 20px !important;
 	    }
     </style>
   </head>
@@ -159,7 +167,7 @@ if (!isset($_SESSION['filterpref'])) {
 		}
 
 		checkMode('init');
-
+		
 		date_default_timezone_set('America/New_York'); //set timezone
 		try {
 			$date1 = new DateTime($_SESSION['age']); //compare age from database with current time
@@ -173,8 +181,11 @@ if (!isset($_SESSION['filterpref'])) {
 		$email = $row['email'];
 		$bio = $row['bio'];
 		$size = 300;
+		if ($grav_default === 'custom') {
+			$grav_default = $grav_custom;
+		}
 		$grav_url = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?d=" . $grav_default . "&s=" . $size . "&r=" . $grav_rating;
-	}
+		}
 	?>
 
 	<section class="userinfo">
@@ -182,7 +193,7 @@ if (!isset($_SESSION['filterpref'])) {
 	if ($localcode) {
 		echo '<img class="userinfo-userpic" data-src="holder.js/177x177" alt="" />';
 	} else {
-	echo '<img class="userinfo-userpic" src="' . $grav_url . '" alt="" />';
+	echo '<a href="https://en.gravatar.com/emails/" target="_blank"><img class="userinfo-userpic" src="' . $grav_url . '" alt="" /></a>';
 	}
 	?>
 	
@@ -199,16 +210,17 @@ if (!isset($_SESSION['filterpref'])) {
 			?>
 			</h3>
 			<?php if($user != $username) { ?>
-			<h4 class="userinfo-username"><i><?php echo $user ?></i></h4>
+			<h4 class="userinfo-username"><i><?php echo stripslashes($user) ?></i></h4>
 			
 			<?php }
 				if ($_SESSION['user'] === $user) { ?>
 				<style type="text/css">
 					.userinfo {
+						/*height: 600px;*/
 						height: 450px;
 					}
 				</style>
-				<p><textarea rows="4" class="userinfo-edit userinfo-editable" name="content" id="bio" placeholder="Write a little about yourself!" onFocus="recordBio()" onBlur="updateBio()"><?php echo $bio ?></textarea></p>
+				<p><textarea rows="4" class="userinfo-edit userinfo-editable" name="content" id="bio" placeholder="Write a little about yourself! You can use some html tags too :D" onFocus="recordBio()" onBlur="updateBio()"><?php echo $bio ?></textarea></p>
 
 		<section class="userinfo-config">
 							<label class="loginpage-content-title userinfo-config-title" for="upass" id="passlab"><i class="fa fa-unlock-alt"></i> Change password</label><br>
@@ -240,8 +252,8 @@ if (!isset($_SESSION['filterpref'])) {
 	</section>
 
 
-	<div class="footer">
-		<div class="pagn" style="float:left;margin-top:3px">&copy; 2014 Theodore Kluge</div>
+	<div class="footer" style="bottom:0px; position: absolute">
+		<div class="pagn" style="float:left">&copy; 2014 Theodore Kluge</div>
 	</div>
 
 <!-- Modal -->
@@ -275,6 +287,26 @@ if (!isset($_SESSION['filterpref'])) {
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">
 	</form>
+
+	<?php if ($usetinymce === 'true') { ?>
+	<!-- <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script> -->
+	<!--<script type="text/javascript" src="includes/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript">
+	        tinymce.init({
+	        	selector:'textarea#bio',
+	        	plugins: [
+	        		"autolink lists link image preview",
+	        		"searchreplace code fullscreen",
+	        		"media table paste contextmenu"
+	        	],
+	        	toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+	        });
+
+			setTimeout(function() {
+				tinymce.get('bio').dom.loadCSS('css/blag-light-tinymce.css');
+			}, 500); //delay while tinymce loads
+	</script>-->
+	<?php } ?>
 
 	<script type="text/javascript">
 	var currentName;
@@ -413,6 +445,11 @@ if (!isset($_SESSION['filterpref'])) {
 		recordEmail();
 	}
 
+	$('textarea#bio').keydown(function (e){
+	    if(e.keyCode == 13){
+	        $('textarea#bio').val($('textarea#bio').val() + '<br>');
+	    }
+	});
 	</script>
 
 	<!--<script>

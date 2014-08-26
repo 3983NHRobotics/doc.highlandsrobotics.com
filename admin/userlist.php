@@ -55,6 +55,7 @@ if(!isset($_SESSION['user'])) {
 	}
 	?>
     <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smoothscroll.js"></script>
     <script src="../js/blag.js"></script>
   </head>
 <body>

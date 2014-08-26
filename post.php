@@ -13,11 +13,21 @@ if (!isset($_SESSION['filterPref'])) {
 } else {
 	$filterPref = $_SESSION['filterPref'];
 }
-error_reporting(0);//remove for debug
+$isLoggedUser = false;
+$isAdmin = false;
+if($_SESSION['mode'] === 'loggeduser') {
+	$isLoggedUser = true;
+}
+if($_SESSION['mode'] === 'admin') {
+	$isAdmin = true;
+}
+
+//error_reporting(0);//remove for debug
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $starttime = $time;
+
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +54,26 @@ $starttime = $time;
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 
     <style type="text/css">
-    	.maturecontent-wrapper {
+	    .replyform {
+	    	width: 100%;
+	    	position: relative;
+	    	margin-top: 20px;
+	    }
+	    .replyform textarea {
+	    	margin: 0px;
+	    	width: 90%;
+	    	max-width: 90%;
+	    	min-width: 90%;
+	    	height: 60px;
+	    	float: left;
+	    }
+	    .replyform button {
+	    	margin: 0px;
+	    	width: 10%;
+	    	height: 60px;
+	    	float: right;
+	    }
+	    .maturecontent-wrapper {
     		width: 100%;
     	}
     	.maturecontent-hidden {
@@ -61,6 +90,7 @@ $starttime = $time;
     		position: relative;
     		border: #aaa 1px solid;
     	}
+
     </style>
   </head>
 <body>
@@ -69,9 +99,18 @@ $starttime = $time;
 		Error goes here
 	</div>
 	<div id="wrapper">
-
 	<?php
-		function checkMode($type) {
+	function strip_tags_attributes( $str, 
+		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
+		    $disabledEvents = array('onclick','ondblclick','onkeydown','onkeypress','onkeyup','onload','onmousedown','onmousemove','onmouseout','onmouseover','onmouseup','onunload') )
+		{       
+		    if( empty($disabledEvents) ) {
+		        return strip_tags($str, implode('', $allowedTags));
+		    }
+		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
+		}
+
+		function checkMode($type) { //not sure why this function exists
 
 			global $unamesub;
 
@@ -136,6 +175,7 @@ $starttime = $time;
         } else {
 
 		checkMode('init');
+		//echo '<br>Name: ' . $uname. " <br>PassSHA1: ".$upass;
 
 		if (!empty($_GET['p'])) {
 			$pagenumber = mysqli_real_escape_string($db, $_GET['p']);
@@ -143,16 +183,12 @@ $starttime = $time;
 			$_GET['p'] = '1';
 			$pagenumber = '1';
 		}
-		//display the greeting post
-		if ($_GET['p'] == '1') {
-			echo '<div class="blag-body">
-					<h2 style="text-align:center"> '. $greeting .'</h2>
-					<h4 style="text-align:center">' . $greetingContent . '</h4>
-				  </div>';
-		}
 
 		$start_page = ($pagenumber - 1) * 10;
-		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,10"); //This works!
+		$reply_to = $_GET['reply_to'];
+
+		$post = mysqli_query($db,"SELECT * FROM Posts WHERE PID='$reply_to'");
+		$body = mysqli_query($db,"SELECT * FROM Replies WHERE reply_to='$reply_to' ORDER BY PID DESC LIMIT $start_page,10");
 
 		date_default_timezone_set('America/New_York'); //set timezone
 		try {
@@ -165,10 +201,18 @@ $starttime = $time;
 			//do nothing :D
 		}
 
-		while($row = mysqli_fetch_array($body)) {
-		    echo '<div class="blag-body">';
-			echo '<a href="post.php?reply_to=' . $row['PID'] . '"><h3>' . $row['title'] . '</h3></a>';
-			if ($row['isNSFW'] == 1) {
+		$replyForm = '<form class="replyform" name="submitcomment" action="post.php?' . $_SERVER["QUERY_STRING"] . '" method="post" id="submitcomment"><textarea class="acc-content" name="submitcommenttextarea" placeholder="Write a comment! :D" id="submitcomment"></textarea><button class="btn btn-submit" type="submit" name="submitcomment">Post</button></form>';
+
+			while($row = mysqli_fetch_array($post)) {
+				if ($isLoggedUser || $isAdmin) {
+			    	echo '<div class="blag-body" style="padding-bottom: 80px;">';
+				} else {
+					echo '<div class="blag-body">';
+				}
+
+				echo '<h3>' . $row['title'] . '</h3>';
+
+				if ($row['isNSFW'] == 1) {
 				//echo 'isNSFW = true;<br>';
 				if ($_SESSION['mode'] == 'user') { //hide post
 					echo '<p class="maturecontent-warning">please <a href="login.php">log in</a> to view this post</p>';
@@ -185,27 +229,49 @@ $starttime = $time;
 				echo '<p>' . $row['content'] . '</p>';
 			}
 
-			echo '<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
+				echo '<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
 
-			if ($_SESSION['mode'] == 'admin') {
-				echo '<div class="editdelete">';
-				echo '<form action="dbquery.php" method="post" name="deletepost" id="delpost' . $row['PID'] . '">
-				<input type="hidden" name="postid" value="' . $row["PID"] . '">
-				<button type="submit" value="Delete" name="deletepost" class="editdelbtn" onClick="return confirm(\'Are you sure you want to delete this post?\')">Delete</button>
-				</form>';
-				echo '<form action="edit.php?action=edit&return_to=' . $_GET["p"] . '" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
-				<input type="hidden" name="postid" value="' . $row["PID"] . '">
-				<button type="submit" value="Edit" name="Entereditcontent" class="editdelbtn">Edit</button>
-				</form>';
-				echo'</div>';
-			} else if ($_SESSION['mode'] == 'loggeduser') {
-			  	//reply button type stuff goes here
+				if ($isAdmin) {
+					echo '<div class="editdelete">
+					<form action="dbquery.php" method="post" name="deletepost" id="delpost' . $row['PID'] . '">
+					<input type="hidden" name="postid" value="' . $row["PID"] . '">
+					<button type="submit" value="Delete" name="deletepost" class="editdelbtn" onClick="return confirm(\'Are you sure you want to delete this post?\')">Delete</button>
+					</form>
+					<form action="edit.php?action=edit" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
+					<input type="hidden" name="postid" value="' . $row["PID"] . '">
+					<button type="submit" value="Edit" name="Entereditcontent" class="editdelbtn">Edit</button>
+					</form>
+					</div>';
+					echo $replyForm;
+				} else if ($isLoggedUser) {
+			  		echo $replyForm;
+			  	}
+					echo '</div><br>';
+			}
+			while($row = mysqli_fetch_array($body)) {
+			    echo '<div class="blag-reply-body">
+					<p>' . $row['content'] . '</p>
+					<span class="timestamp">' . $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
+				if ($isAdmin) {
+					echo '<div class="editdelete">';
+					echo '<form action="" method="post" name="deletereply" id="delpost' . $row['PID'] . '">
+					<input type="hidden" name="postid" value="' . $row["PID"] . '">
+					<input type="hidden" name="type" value="reply">
+					<button type="submit" value="Delete" name="deletereply" class="editdelbtn" onClick="return confirm(\'Are you sure you want to delete this reply?\')">Delete</button>
+					</form>';
+					echo '<form action="edit.php?action=edit&return_to=' . $_GET["reply_to"] . '" method="post" name="Entereditcontent" id="editpost' . $row['PID'] . '">
+					<input type="hidden" name="postid" value="' . $row["PID"] . '">
+					<input type="hidden" name="type" value="reply">
+					<button type="submit" value="Edit" name="Entereditcontent" class="editdelbtn">Edit</button>
+					</form>';
+					echo'</div>';
+				  } else if ($isLoggedUser || $isAdmin) {
+				  	//echo '<br>reply button type stuff goes here';
+				  }
+				echo '</div>';
 			}
 
-			echo '</div>';
-		}
-
-		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Posts");
+		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Replies");
 		$row = mysqli_fetch_row($pages);
 		$total_things = $row[0];
 		$total_pages = ceil($total_things / 10); //gets the number of pages for pagination
@@ -217,13 +283,12 @@ $starttime = $time;
 			Pages: 
 			<?php
 				for ($i = 1; $i <= $total_pages; $i++) { 
-	            	echo "<a class='pagnbtn' href='" . dirname($_SERVER['SCRIPT_NAME']) . "/?p=" . $i . "'>" . $i . "</a> "; 
+	            	echo "<a class='pagnbtn' href='" . dirname($_SERVER['REQUEST_URI']) . '/post.php?reply_to=' . $_GET['reply_to'] . "&p=" . $i . "'>" . $i . "</a> "; 
 				}
 			?>
 		</div>
 	</div>
 	</div>
-
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
@@ -275,6 +340,40 @@ $starttime = $time;
 		<input type="hidden" value="logout">
 	</form>
 	<?php 
+		if(isset($_POST["submitcomment"])) {
+			if($isLoggedUser || $isAdmin) {
+				$content = addslashes(strip_tags_attributes($_POST["submitcommenttextarea"]));
+				if ($content != '') {
+					//Change this so that apostraphes and stuff can be used
+					$creator = '<a href="user.php?u=' . $_SESSION['user'] . '">' . $_SESSION['username'] . '</a>';
+					date_default_timezone_set('America/New_York');
+					$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
+					$reply_to = $_GET['reply_to'];
+
+			        $sql = "INSERT INTO Replies (reply_to, content, creator, timestamp)
+	                    VALUES ('$reply_to', 
+	                    '$content', 
+	                    '$creator',
+	                    '$timestamp')";
+
+		            if (!mysqli_query($db,$sql)) {
+		                die('Error: ' . mysqli_error($db));
+		            }
+		            echo '<script type="text/javascript">location.href = "post.php?' . $_SERVER['QUERY_STRING'] . '";</script>';
+		        }
+			}
+		}
+	if(isset($_POST['deletereply'])) {
+		if(isset($_SESSION['mode'])) {
+			if($_SESSION['mode'] === 'admin') {
+				$pid = $_POST['postid'];
+				$sql = "DELETE FROM Replies WHERE PID=$pid";
+				mysqli_query($db, $sql);
+				echo '<script type="text/javascript">location.href = "post.php?' . $_SERVER['QUERY_STRING'] . '";</script>';
+			}
+		}
+	}
+
 	if($localcode) {
     echo '<script src="js/jquery.min.js"></script>';
 	} else {
@@ -286,26 +385,6 @@ $starttime = $time;
     <script src="js/blag.js"></script>
 	<!--<script src="js/jquery.stellar.js"></script>-->
 	<script type="text/javascript">
-	var docHeight = $(document).height();
-	var image_url = $('body').css('background-image'), image;
-
-	image_url = image_url.match(/^url\("?(.+?)"?\)$/);
-
-	if (image_url[1]) {
-	    image_url = image_url[1];
-	    image = new Image();
-
-	    $(image).load(function () {
-	        console.log(image.width + 'x' + image.height);
-	        console.log("docHeight: " + docHeight);
-			var dsbr = (image.height / docHeight) / 10;
-			console.log("dsbr: " + dsbr);
-			$('body').attr('data-stellar-background-ratio', dsbr);
-			$.stellar();
-	    });
-
-	    image.src = image_url;
-	}
 
 	function updateDelModal(pid) {
 		//$('#delSubBtn').attr('onClick', '$("#delpost' + pid + '").submit()');
@@ -313,19 +392,24 @@ $starttime = $time;
 		$('#delSubBtn').attr('onClick', 'document.getElementById("delpost' + pid + '").submit()');
 		$('#delModal').modal();
 	}
-
 	function confirmDelete() {
 		if(confirm("Are you sure you want to delete this post?")) {
 			return true;
 		} else {
 			return false;
-		}
-		
+		}	
 	}
 	function showHidden(pid) {
 		$('#maturecontent-hidden-' + pid).css('display', 'block');
 		$('.maturecontent-warning').css('display','none');
 	}
+
+	$('textarea#submitcomment').keydown(function (e){
+	    if(e.keyCode == 13){
+	        $('textarea#submitcomment').val($('textarea#submitcomment').val() + '<br>');
+	    }
+	});
+
 	</script>
 
 	<!--<script>
@@ -338,6 +422,7 @@ $starttime = $time;
 	  ga('send', 'pageview');
 
 	</script> -->
+
 	<?php
 	$time = microtime();
 	$time = explode(' ', $time);

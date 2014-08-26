@@ -22,7 +22,7 @@
   </div>
 <?php
 
-include('../includes/user.php');
+require('../includes/user.php');
 
 if (isset($_POST["Submit"])) {
 
@@ -65,7 +65,7 @@ $installed = true;
                 age TINYTEXT,
                 isAdmin TINYINT,
                 filterPref TINYINT)';
-            $age = htmlentities($_POST['uage']);
+            $age = htmlentities($_POST['uage']); //should make the TINYINT to boolean
             $uname = addslashes($_POST['uname']);
             $options = [
                 'cost' => 11,
@@ -104,7 +104,8 @@ $installed = true;
                 content TEXT,
                 creator VARCHAR(150),
                 timestamp VARCHAR(30),
-                tags VARCHAR(100))';
+                tags VARCHAR(150),
+                isNSFW BOOLEAN)';
 
             $firstpost_title = 'Welcome to Blag';
             $firstpost_content = "Welcome to Blag - the lightweight bloggy thing that was written in (currently) 4 days!";
@@ -125,6 +126,32 @@ $installed = true;
                     '$firstpost_creator',
                     '$firstpost_timestamp',
                     '$firstpost_tags')";
+
+            if (!mysqli_query($db,$sql)) {
+                die('Error: ' . mysqli_error($db));
+            }
+
+            $sql = 'CREATE TABLE Replies (
+                PID INT NOT NULL AUTO_INCREMENT, 
+                PRIMARY KEY(PID),
+                reply_to INT,
+                content TEXT,
+                creator VARCHAR(150),
+                timestamp VARCHAR(30))';  
+
+            if (!mysqli_query($db,$sql)) {
+                die('Error: ' . mysqli_error($db));
+            }
+
+            $firstreply_content = 'This is a reply to a post';
+            $firstreply_creator = 'The Blag';
+            $firstreply_timestamp = $firstpost_timestamp;
+
+            $sql = "INSERT INTO Replies (reply_to, content, creator, timestamp)
+                    VALUES ('1', 
+                    '$firstreply_content', 
+                    '$firstreply_creator',
+                    '$firstreply_timestamp')";
 
             if (!mysqli_query($db,$sql)) {
                 die('Error: ' . mysqli_error($db));

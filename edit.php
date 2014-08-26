@@ -13,11 +13,14 @@ if(!isset($_SESSION['user'])) {
 
 <html lang="en">
   <head>
-    <title>Blag Test - Edit</title>
+    <title>The Blag - Edit</title>
         <?php
     	require ('/includes/config.php');
     	require('/includes/user.php');
-    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
+    	echo '<link rel="stylesheet" href="css/blag-light.css">';
+    	if ($usecustombg == "true") {
+				echo '<style type="text/css">body{background: url("' . $custombg . '")}</style>';
+			}
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -30,10 +33,8 @@ if(!isset($_SESSION['user'])) {
     <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
 
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Font Awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
-	
-<!--   <link rel="stylesheet" href="css/fancy-buttons.css"> -->
+
 <?php 
 	if($localcode) {
     echo '<script src="js/jquery.min.js"></script>';
@@ -43,6 +44,29 @@ if(!isset($_SESSION['user'])) {
 	?>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/blag.js"></script>
+    <style type="text/css">
+    input#title {
+    	font-size: 30px;
+    }
+    input[type='radio'] {
+    	display: none;
+    }
+    input[type='radio'] + label {
+    	border: rgba(0,0,0,.4) 1px solid;
+    	border-radius: 33px;
+    	background: rgba(0,0,0,.2);
+    	transition: all .2s ease;
+    	-webkit-transition: all .3s ease;
+    	margin: 0px 5px 0px 5px;
+    	padding: 5px;
+    	width: 50px;
+    	text-align: center;
+	}
+	input[type='radio']:checked + label {
+		background: #d4a017;
+		color: #c04000;
+	}
+    </style>
   </head>
 <body>
 
@@ -74,19 +98,20 @@ if(!isset($_SESSION['user'])) {
 			if(isset($_POST["Submit"])) {
 				//Change this so that apostraphes and stuff can be used
 				$title = addslashes(strip_tags_attributes($_POST["title"]));
-				//$title = addslashes($_POST["title"]);
 				$content = addslashes(strip_tags_attributes($_POST["content"]));
 				$creator = '<a href="user.php?u=' . $_SESSION['user'] . '">' . $_SESSION['username'] . '</a>';
 				date_default_timezone_set('America/New_York');
 				$timestamp = date("m/d/Y") . ' at ' . date("h:i:s a");
 				$tags = addslashes(strip_tags_attributes($_POST['tags']));
+				$isNSFW = $_POST['nsfwcheck'];
 
-		        $sql = "INSERT INTO Posts (title, content, creator, timestamp, tags)
+		        $sql = "INSERT INTO Posts (title, content, creator, timestamp, tags, isNSFW)
                     VALUES ('$title', 
                     '$content', 
                     '$creator',
                     '$timestamp',
-                    '$tags')";
+                    '$tags',
+                    '$isNSFW')";
 
 	            if (!mysqli_query($db,$sql)) {
 	                die('Error: ' . mysqli_error($db));
@@ -99,9 +124,19 @@ if(!isset($_SESSION['user'])) {
 			}
 
 			if(isset($_POST['Edit'])) {
+				if(isset($_POST['type'])) {
+					if($_POST['type'] === 'reply') {
+						//bla
+					}
+				} else {
 				$newtitle = addslashes(strip_tags_attributes($_POST['title']));
+				$newtags = addslashes(strip_tags_attributes($_POST['tags']));
+				$isNSFW = $_POST['nsfwcheck'];
+				}
+
 				$newcontent = addslashes(strip_tags_attributes($_POST['content']));
 				$postid = $_POST['postid'];
+				$return_to = $_GET['return_to'];
 
 				$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
 				if (mysqli_connect_errno()) {
@@ -109,15 +144,20 @@ if(!isset($_SESSION['user'])) {
 		        echo "<script type='text/javascript'>displayLoginError('error', 'MySQL conn failed: " . mysqli_connect_error() . "')</script>";
 		        }
 
-		        $sql = "UPDATE Posts SET title='$newtitle', content='$newcontent' WHERE PID=$postid";
+		        if(!isset($_POST['type'])) {
+		        	$sql = "UPDATE Posts SET title='$newtitle', content='$newcontent', tags='$newtags', isNSFW='$isNSFW' WHERE PID=$postid";
+		        	$header = dirname($_SERVER['REQUEST_URI']) . '/index.php?p=' . $return_to;
+		        } else {
+		        	$sql = "UPDATE Replies SET content='$newcontent' WHERE PID=$postid";
+		        	$header = dirname($_SERVER['REQUEST_URI']) . '/post.php?reply_to=' . $return_to;
+		        }
 
 		        if (!mysqli_query($db,$sql)) {
 	                die('Error: ' . mysqli_error($db));
 	            }
 
 		        mysqli_close($db);
-		        header('Location: ' . dirname($_SERVER['REQUEST_URI']));
-		        //echo 'pjrsohs';
+		        header('Location: ' . $header);
 			}
 			
 		?>
@@ -144,9 +184,12 @@ if(!isset($_SESSION['user'])) {
 			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
 
 			<p><textarea class="editpage-content" name="content" id="content" rows="18" cols="60" placeholder="Write stuffs here"></textarea>
+			Tags and stuff:
+			<p><input class="editpage-content" type="text" placeholder="Separate tags with spaces" value="" name="tags">
 
-			<p><input type="hidden" value="hi" name="tags">
-
+			<p><span class="">Tag for mature content?</span>
+			<input class="" type="radio" value="1" name="nsfwcheck" id="cb1"><label for="cb1">Yes</label>
+			<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" checked><label for="cb2">No</label>
 			<p><input class="btn btn-submit" type="submit" name="Submit" value="Post">
 
 			</form>
@@ -156,21 +199,32 @@ if(!isset($_SESSION['user'])) {
 			if(isset($_POST['Entereditcontent'])) {
 				$postid = $_POST['postid'];
 
-				//echo '<script language="javascript">$("form#edit").prepend("<input type=\"hidden\" name=\"postid\" value=\"' . $postid . '\">");</script>';
-
-		        $body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
+				if(isset($_POST['type'])) {
+					if($_POST['type'] === 'reply') {
+						$body = mysqli_query($db,"SELECT * FROM Replies WHERE PID=$postid");
+					}
+				} else {
+					$body = mysqli_query($db,"SELECT * FROM Posts WHERE PID=$postid");
+				}
 
 		        while($row = mysqli_fetch_array($body)) {
 				  	?>
-				  	<!--<script type="text/javascript">updateForm("<?php echo $row['title']; ?>", "<?php echo $row['content']; ?>");
-				  	</script>-->
 				  	<form action="" method="post" name="Edit" id="edit">
 				  	<input type="hidden" name="postid" value="<?php echo $postid; ?>">
-
-					<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title" value="<?php echo $row['title']; ?>">
-
+				  	<?php if(!isset($_POST['type'])) { ?>
+					<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title" value="<?php echo $row['title'] ?>">
+					<?php } else { ?>
+					<input type="hidden" name="type" value="reply">
+					<input type="hidden" name="return_to" value="<?php $_GET['return_to'] ?>"
+					<?php } ?>
 					<p><textarea class="editpage-content" name="content" id="content" rows="18" cols="60" placeholder="Write stuffs here"><?php echo $row['content']; ?></textarea>
 
+					Tags and stuff:
+					<p><input class="editpage-content" type="text" placeholder="Separate tags with spaces" value="<?php echo $row['tags']; ?>" name="tags">
+
+					<p><span class="">Tag for mature content?</span>
+					<input class="" type="radio" value="1" name="nsfwcheck" id="cb1" <?php echo ($row['isNSFW'] == 1)?'checked':'' ?>><label for="cb1">Yes</label>
+					<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" <?php echo ($row['isNSFW'] == 0)?'checked':'' ?>><label for="cb2">No</label>
 					<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
 
 					</form>
@@ -205,6 +259,12 @@ if(!isset($_SESSION['user'])) {
 			setTimeout(function() {
 				tinymce.get('content').dom.loadCSS('css/blag-light-tinymce.css');
 			}, 500); //delay while tinymce loads
+
+			$('textarea#bio').keydown(function (e){
+			    if(e.keyCode == 13){
+			        $('textarea#content').val($('textarea#bio').val() + '<br>');
+			    }
+			});
 	</script>
 	<?php 
 		

@@ -16,7 +16,10 @@ $filterPref = $_SESSION['filterPref'];
   <head>
     <title>Blag Test</title>
     <?php
-    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
+    	echo '<link rel="stylesheet" href="css/blag-light.css">';
+    	if ($usecustombg == "true") {
+				echo '<style type="text/css">body{background: url("' . $custombg . '")}</style>';
+			}
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {

@@ -10,16 +10,18 @@ $_SESSION['theme'] = $theme;
 if(!isset($_SESSION['user'])) {
 	$_SESSION['user'] = 'Guest';
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Blag Test</title>
+    <title>The Blag</title>
     <?php
     	require ('/includes/config.php');
-    	echo '<link rel="stylesheet" href="../css/blag-light.css">';
+    	echo '<link rel="stylesheet" href="css/blag-light.css">';
+    	if ($usecustombg == "true") {
+				echo '<style type="text/css">body{background: url("' . $custombg . '")}</style>';
+			}
     	echo '<link rel="stylesheet" href="css/blag-' . $_SESSION['theme'] . '.css">';
     	
     	if ($usepace === 'true') {
@@ -180,14 +182,18 @@ if(!isset($_SESSION['user'])) {
 				$_SESSION['username'] = $row['disname'];
 				$_SESSION['email'] = $row['email'];
 				$_SESSION['age'] = $row['age'];
-				$_SESSION['filterPref'] = $row['filterPref'];
+				$_SESSION['filterPref'] = $row['filterPref']; //0 is off, 1 is on. stop forgetting this.
 				checkMode('login');
-				//sleep(1); //pointless
-				header('Location: ' . dirname($_SERVER['PHP_SELF']));
+
+				if ($_SERVER['REQUEST_URI'] == dirname($_SERVER['REQUEST_URI']) . '/login.php') {
+					header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				} else {
+					header('Location: ' . $_SERVER['HTTP_REFERER']); //this doesnt work, add a thing to the login.php form to check if the form is from this page
+				}
 				die();
 			} else {
 			    echo "<script type='text/javascript'>displayLoginError('error', 'Incorrect password')</script>";
-			    echo "<script type='text/javascript'>$('#passvalid').css('color','#e77471') //light red
+			    echo "<script type='text/javascript'>$('#passvalid').css('color','#e77471')
 						.removeClass('fa-check-square')
 						.addClass('fa-exclamation-triangle');</script>";
 			}
