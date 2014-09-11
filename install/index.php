@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Blag Test</title>
+    <title>Install Documentations</title>
         <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="../css/bootstrap.min.css">
     <!-- Font Awesome -->
   <link rel="stylesheet" href="../css/font-awesome.min.css">
-  <link rel="stylesheet" href="../css/blag-light.css">
+  <link rel="stylesheet" href="../css/style.css">
 
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/blag.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/doc.js"></script>
 
   </head>
 <body>
@@ -22,7 +22,7 @@
   </div>
 <?php
 
-require('../includes/user.php');
+require('../includes/dbinfo.php');
 
 if (isset($_POST["Submit"])) {
 
@@ -42,7 +42,7 @@ $installed = true;
 
     if (!isset($installed)) {
 
-        $fp = fopen("../includes/user.php", "w");
+        $fp = fopen("../includes/dbinfo.php", "w");
 
         fwrite($fp, $string);
 
@@ -63,8 +63,8 @@ $installed = true;
                 disname VARCHAR(50),
                 bio TEXT,
                 age TINYTEXT,
-                isAdmin TINYINT,
-                filterPref TINYINT)';
+                isAdmin BOOLEAN,
+                filterPref BOOLEAN)';
             $age = htmlentities($_POST['uage']); //should make the TINYINT to boolean
             $uname = addslashes($_POST['uname']);
             $options = [
@@ -88,7 +88,7 @@ $installed = true;
                     '$default',
                     '$default',
                     '$default',
-                    '$default',
+                    '1995-03-21',
                     '1',
                     '1')";
 
@@ -131,7 +131,7 @@ $installed = true;
                 die('Error: ' . mysqli_error($db));
             }
 
-            $sql = 'CREATE TABLE Replies (
+            /*$sql = 'CREATE TABLE Replies (
                 PID INT NOT NULL AUTO_INCREMENT, 
                 PRIMARY KEY(PID),
                 reply_to INT,
@@ -155,14 +155,14 @@ $installed = true;
 
             if (!mysqli_query($db,$sql)) {
                 die('Error: ' . mysqli_error($db));
-            }
+            }*/
 
-            header("Location: /blag/index.php");
+            header("Location: ../index.php");
 
         } 
 
     } else {
-        echo "<script type='text/javascript'>displayLoginError('error', 'Blag is already installed')</script>";
+        echo "<script type='text/javascript'>displayLoginError('error', '.Doc is already installed')</script>";
     }
 
     

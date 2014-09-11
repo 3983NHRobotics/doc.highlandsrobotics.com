@@ -199,7 +199,7 @@ if (!isset($_SESSION['filterPref'])) {
 	
 		<section class="userinfo-right">
 			<h3 class="userinfo-username">
-			<?php if($_SESSION['user'] === $user) { ?>
+			<?php if($_SESSION['user'] === $user || $_SESSION['mode'] == 'admin') { ?>
 				
 				<p><input class="userinfo-username-edit userinfo-editable"  type="text" name="username" id="username" placeholder="Set your display name" value="<?php echo $username ?>" onFocus="recordName()" onBlur="updateName()"></p>
 
@@ -213,7 +213,7 @@ if (!isset($_SESSION['filterPref'])) {
 			<h4 class="userinfo-username"><i><?php echo stripslashes($user) ?></i></h4>
 			
 			<?php }
-				if ($_SESSION['user'] === $user) { ?>
+				if ($_SESSION['user'] === $user || $_SESSION['mode'] == 'admin') { ?>
 				<style type="text/css">
 					.userinfo {
 						/*height: 600px;*/
@@ -236,6 +236,7 @@ if (!isset($_SESSION['filterPref'])) {
 						    <input class="userinfo-config-content" name="uemailsub" type="text" id="uemail" value="<?php echo $email; ?>" placeholder="Email address" required>
 						    <button class="userinfo-config-submit" onclick="submitEmail()">Submit</button>
 		</section>
+		<a href="" data-toggle="modal" data-target="#advancedsettingsmodal"><span class="userinfo-footer-l">Slightly more advanced settings</span></a>
 			<?php 
 			} else { 
 				echo '<p class="userinfo-bio">';
@@ -272,17 +273,42 @@ if (!isset($_SESSION['filterPref'])) {
 				    <p>
 				      <input class="editpage-content" name="upasssub" type="password" id="upass" placeholder="Password"> 
 				  </p>
-				  <!-- <input type="submit" name="Login" value="Login"> -->
 		      </div>
 		      <div class="modal-footer">
 		        <a href="register.php" class="reg" style="float: left">Sign up</a>
 		        <button type="submit" name="Login" class="btn btn-submit" onclick="document.login.submit();">Unlock</button>
-		        <!-- <input type="submit" name="login" value="Login"> -->
 		      </div>
 		  </form>
     </div>
   </div>
 </div>
+
+<?php if($_SESSION['user'] === $user || $_SESSION['mode'] == 'admin') { ?>
+<div class="modal fade" id="advancedsettingsmodal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-gears"></i> User settings</h4>
+		</div>
+		<div class="modal-body">
+		<ul>
+		<form id="usersettings">
+			<li><input class="acc-checkbox" type="checkbox" id="d" disabled><span class="usersetting-content">checkbox</span>
+			<li><input class="acc-checkbox" type="checkbox" id="d" checked><span class="usersetting-content">checkbox</span>
+			<li><input class="acc-checkbox" type="checkbox" id="d"><span class="usersetting-content">checkbox</span>
+			<li><input class="acc-checkbox" type="checkbox" id="d"><span class="usersetting-content">checkbox</span>
+			<li><input class="acc-checkbox" type="checkbox" id="d"><span class="usersetting-content">checkbox</span>
+		</form>
+		</ul>
+		</div>
+		<div class="modal-footer">
+		    <button type="submit" name="Savesettings" class="btn btn-submit" onclick="saveUserSettings()">Save</button>
+		</div>
+    </div>
+  </div>
+</div>
+<?php } ?>
 
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">
@@ -340,13 +366,15 @@ if (!isset($_SESSION['filterPref'])) {
 	function updateName() {
 		//$('.userinfo-working').css('visibility','visible');
 		var udname = $('input.userinfo-username-edit').val();
+		var user = '<?php echo $user ?>';
 		if (udname != currentName) {
-			$.post("dbquery.php", { udname: udname }, function(result){
+			$.post("dbquery.php", { udname: udname, user: user }, function(result){
 		 		if (result == 1) {
 		 			console.log('username update successful');
 		 			$('.userinfo-footer').css('visibility','visible');
 		 		} else {
 		 			console.log('username update failed');
+		 			console.log(result);
 		 		}
 		 		$('.userinfo-working').css('visibility','hidden');
 	 		});  
@@ -360,13 +388,15 @@ if (!isset($_SESSION['filterPref'])) {
 	function updateBio() {
 		//$('.userinfo-working').css('visibility','visible');
 		var udbio = $('textarea#bio').val();
+		var user = '<?php echo $user ?>';
 		if (udbio != currentBio) {
-			$.post("dbquery.php", { udbio: udbio }, function(result){
+			$.post("dbquery.php", { udbio: udbio, user: user }, function(result){
 		 		if (result == 1) {
 		 			console.log('bio update successful');
 		 			//$('.userinfo-footer').css('visibility','visible');
 		 		} else {
 		 			console.log('bio update failed');
+		 			console.log(result);
 		 		}
 		 		$('.userinfo-working').css('visibility','hidden');
 	 		});  
@@ -374,7 +404,7 @@ if (!isset($_SESSION['filterPref'])) {
 			console.log("bio " + currentBio + " not changed");
 			$('.userinfo-working').css('visibility','hidden');
 		}
-		$('textarea#bio').css('background','rgba(0,0,0,0)');
+		$('textarea#bio').css('background','white');
 	}
 	$('#upass, #upass2').on('input', function checkPass() {
 		
@@ -406,9 +436,10 @@ if (!isset($_SESSION['filterPref'])) {
 	function submitPass() {
 		var newpass = $('#upass').val();
 		var newpassconf = $('#upass2').val();
+		var user = '<?php echo $user ?>';
 		if (pavail) {
 			$('.userinfo-working').css('visibility','visible');
-			$.post("dbquery.php", { newpass: newpass, newpassconf: newpassconf }, function(result){
+			$.post("dbquery.php", { newpass: newpass, newpassconf: newpassconf, user: user }, function(result){
 		 		if (result == 1) {
 		 			console.log('pass update successful');
 		 			displayLoginError('error', 'Updated password');
@@ -417,6 +448,7 @@ if (!isset($_SESSION['filterPref'])) {
 		 			$('.userinfo-working').css('visibility','hidden');
 		 		} else {
 		 			console.log('pass update failed');
+		 			console.log(result);
 		 			$('.userinfo-working').css('visibility','hidden');
 		 		}
 	 		});  
@@ -426,15 +458,18 @@ if (!isset($_SESSION['filterPref'])) {
 	}
 	function submitEmail() {
 		var newemail = $('#uemail').val();
+		var user = '<?php echo $user ?>';
+		console.log(user + ' (' + typeof(user) + ')');
 		$('.userinfo-working').css('visibility','visible');
 		if (currentEmail != newemail) {
-			$.post("dbquery.php", { newemail: newemail }, function(result){
+			$.post("dbquery.php", { newemail: newemail, user: user }, function(result){
 			 		if (result == 1) {
 			 			console.log('email update successful');
 			 			displayLoginError('error', 'Updated email');
 			 			$('.userinfo-working').css('visibility','hidden');
 			 		} else {
 			 			console.log('email update failed');
+			 			console.log(result);
 			 			$('.userinfo-working').css('visibility','hidden');
 			 		}
 		 		});  

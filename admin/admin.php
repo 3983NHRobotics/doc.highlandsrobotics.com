@@ -220,7 +220,7 @@ error_reporting(0);//remove for debug
 		<li class="active"><a href="#tab-titles">Titles</a></li>
 		<li class=""><a href="#tab-colors">Colors</a></li>
 		<li class=""><a href="#tab-includes">Includes</a></li>
-		<li class=""><a href="#tab-display">Display</a></li>
+		<!-- <li class=""><a href="#tab-display">Display</a></li> -->
 		<li class=""><a href="#tab-gravatar">Gravatar</a></li>
 		<li class=""><a href="#tab-users" onclick="getUserlist()">User list</a></li>
 	</ul>
@@ -263,6 +263,7 @@ error_reporting(0);//remove for debug
 		<li><input class="acc-checkbox" type="checkbox" name="usetinymce" value="true" size="17" <?php echo ($usetinymce=='true')?'checked':'' ?>><span class="acc-content">Use TinyMCE?</span>
 		<li><input class="acc-checkbox" type="checkbox" name="usepace" value="true" size="17" <?php echo ($usepace=='true')?'checked':'' ?>><span class="acc-content">Use PACE for pageload animations?</span>
 		<li><input class="acc-checkbox" type="checkbox" name="uselocalcode" value="true" size="17" <?php echo ($localcode=='true')?'checked':'' ?>><span class="acc-content">Use only local files?</span>
+		<li><input class="acc-checkbox" type="checkbox" value="true" name="showpageloadtime" size="17" <?php echo ($showpageloadtime=='true')?'checked':'' ?>><span class="acc-content">Show pageload time?</span>
 		</ul>
 
 		</div>
@@ -271,13 +272,12 @@ error_reporting(0);//remove for debug
 		<div class="ac-title">Display settings:</div>
 		<ul class="acc-options-list">
 		<li><input class="acc-checkbox" type="checkbox" value="true" size="17"><span class="acc-content">Display stuff?</span>
-		<li><input class="acc-checkbox" type="checkbox" value="true" name="showpageloadtime" size="17" <?php echo ($showpageloadtime=='true')?'checked':'' ?>><span class="acc-content">Show pageload time?</span>
 		</ul>
 		</div>
 <!-- Gravatar stuff -->
 		<div class="admin-control admin-control-gravatar tab" id="tab-gravatar">
 		<div class="ac-title">Gravatar settings:</div>
-		<span class="acc-title">Default gravatar</span>
+		<label class="acc-title">Default gravatar</label>
 		<p>
 		<ul class="acc-options-list" id="grav_list">
 		<!-- <li><input class="acc-radio" type="radio" name="grav_default" value="404" size="17" <?php echo ($grav_default=='404')?'checked':'' ?>><label class="acc-content"><img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=404&f=y" /></label> -->
@@ -286,13 +286,13 @@ error_reporting(0);//remove for debug
 		<li><input class="acc-radio" type="radio" name="grav_default" value="monsterid" id="monsterid" size="17" <?php echo ($grav_default=='monsterid')?'checked':'' ?>><label class="" for="monsterid"><img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid&f=y"/></label>
 		<li><input class="acc-radio" type="radio" name="grav_default" value="wavatar" id="wavatar" size="17" <?php echo ($grav_default=='wavatar')?'checked':'' ?>><label class="" for="wavatar"><img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=wavatar&f=y"/></label>
 		<li><input class="acc-radio" type="radio" name="grav_default" value="retro" id="retro" size="17" <?php echo ($grav_default=='retro')?'checked':'' ?>><label class="" for="retro"><img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=retro&f=y"/></label>
-		<li><input class="acc-radio" type="radio" name="grav_default" value="custom" id="custom" size="17" <?php echo ($grav_default=='custom')?'checked':'' ?>><label class="" for="custom"><img height="80" width="80" src="<?php echo $grav_custom ?>" /></label>Custom:
-		<input type="text" name="grav_custom" value="<?php echo $grav_custom ?>" placeholder="Enter image url:" />
+		<li><input class="acc-radio" type="radio" name="grav_default" value="custom" id="custom" size="17" <?php echo ($grav_default=='custom')?'checked':'' ?>><label class="" for="custom"><img height="80" width="80" src="<?php echo $grav_custom ?>" /></label>
+		&emsp;Custom: <input type="text" name="grav_custom" value="<?php echo $grav_custom ?>" placeholder="Enter image url:" />
 		</ul>
 		</p>
 		<p>
 		<br><br><br><br><br><br><br> <!-- SO UGLY -->
-		<span class="acc-title">Allowed gravatars</span>
+		<label class="acc-title">Allowed gravatars</label>
 		<ul class="acc-options-list" id="grav_list_2">
 		<li><input class="acc-radio" type="radio" name="grav_rating" value="g" id="g" size="17" <?php echo ($grav_rating=='g')?'checked':'' ?>><label class="" for="g"><img src="http://s.gravatar.com/images/gravatars/ratings/0.gif?121" /></label>
 		<li><input class="acc-radio" type="radio" name="grav_rating" value="pg" id="pg" size="17" <?php echo ($grav_rating=='pg')?'checked':'' ?>><label class="" for="pg"><img src="http://s.gravatar.com/images/gravatars/ratings/1.gif?121" /></label>
@@ -301,24 +301,18 @@ error_reporting(0);//remove for debug
 		</ul>
 		</p>
 		</div>
-	<div class="admin-control admin-control-users tab" id="tab-users" style="padding: 0px 10px 50px 0px; position: fixed; overflow: auto">
-	<!-- <div class="ac-title">User list:</div> -->
-	<table id="user-table" class="table-userlist">
+		<div class="admin-control admin-control-users tab" id="tab-users" style="padding: 0px 10px 50px 0px; position: fixed; overflow: auto">
+		<!-- <div class="ac-title">User list:</div> -->
+		<table id="user-table" class="table-userlist">
 
-	</table>
-	</div>
-<!-- Save settings -->
+		</table>
+		</div>
 
 		<button type="submit" id="savesettingsbutton" name="savesettings" class="btn btn-submit" style="display:none"></button>
 	</form>
 	</section>
 </div>
 
-<!-- <div class="footer" style="bottom:0px;position:absolute">
-		<div class="pagn" style="float:left;margin-top:3px">&copy; 2014 Theodore Kluge</div>
-		<button class="btn btn-submit btn-footer-right" style="" onclick="$('#savesettingsbutton').click()">Save</button>
-	</div>
- -->
 	<form action="../login.php" method="post" name="logout" id="logout">
 	<input type="hidden" value="logout">
 	</form>

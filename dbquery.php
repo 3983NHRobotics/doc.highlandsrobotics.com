@@ -4,7 +4,10 @@ require('includes/user.php');
 require('includes/config.php');
 //connect to database  
 $db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+$sessionMode = $_SESSION['mode'];
+$sessionUser = $_SESSION['user'];
 date_default_timezone_set('America/New_York');
+error_reporting(0); //messing up my replies
 
 function strip_tags_attributes( $str, 
 		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
@@ -32,30 +35,35 @@ if(isset($_POST['username'])) {
 
 if(isset($_POST['udname'])) {
 	$udname = addslashes(strip_tags_attributes($_POST['udname']));
-	$user = $_SESSION['user'];
-
-	if (mysqli_query($db, "UPDATE USERS SET disname='$udname' WHERE name='$user'")) {
-		echo 1;
-	} else {
-		echo 0;
+	$userToSet = addslashes(strip_tags_attributes($_POST['user']));
+	$user = $sessionUser;
+	if ($userToSet === $user || $sessionMode === 'admin') {
+		if (mysqli_query($db, "UPDATE USERS SET disname='$udname' WHERE name='$userToSet'")) {
+			echo 1;
+		} else {
+			echo 0;
+		}
 	}
 }
 
 if(isset($_POST['udbio'])) {
 	$udbio = addslashes(strip_tags_attributes($_POST['udbio']));
-	$user = $_SESSION['user'];
-	$sql = "UPDATE Users SET bio='$udbio' WHERE name='$user'";
+	$userToSet = addslashes(strip_tags_attributes($_POST['user']));
+	$user = $sessionUser;
+	if ($userToSet === $user || $sessionMode === 'admin') {
+		$sql = "UPDATE Users SET bio='$udbio' WHERE name='$userToSet'";
 
-	if (mysqli_query($db, $sql)) {
-		echo 1;
-	} else {
-		echo 0;
+		if (mysqli_query($db, $sql)) {
+			echo 1;
+		} else {
+			echo 0;
+		}
 	}
 }
 
 if(isset($_POST['deletepost'])) {
-	if(isset($_SESSION['mode'])) {
-		if($_SESSION['mode'] === 'admin') {
+	if(isset($sessionMode)) {
+		if($sessionMode === 'admin') {
 			$pid = $_POST['postid'];
 			$sql = "DELETE FROM Posts WHERE PID=$pid";
 			mysqli_query($db, $sql);
@@ -68,17 +76,20 @@ if(isset($_POST['deletepost'])) {
 if(isset($_POST['newpass'])) {
 	$newpass = addslashes(strip_tags_attributes($_POST['newpass']));
 	$newpassconf = addslashes(strip_tags_attributes($_POST['newpassconf']));
-	$user = $_SESSION['user'];
+	$userToSet = addslashes(strip_tags_attributes($_POST['user']));
+	$user = $sessionUser;
 	if ($newpass === $newpassconf) {
-		$options = [
-	                'cost' => 11,
-	            ];
-		$passtoset = password_hash($newpass, PASSWORD_BCRYPT, $options);
-		$sql = "UPDATE users SET pass='$passtoset' WHERE name='$user'";
-		if (mysqli_query($db, $sql)) {
-			echo 1;
-		} else {
-			echo 0;
+		if ($userToSet === $user || $sessionMode === 'admin') {
+			$options = [
+		                'cost' => 11,
+		            ];
+			$passtoset = password_hash($newpass, PASSWORD_BCRYPT, $options);
+			$sql = "UPDATE users SET pass='$passtoset' WHERE name='$userToSet'";
+			if (mysqli_query($db, $sql)) {
+				echo 1;
+			} else {
+				echo 0;
+			}
 		}
 	} else {
 		echo 0;
@@ -87,20 +98,24 @@ if(isset($_POST['newpass'])) {
 
 if(isset($_POST['newemail'])) {
 	$newemail = addslashes(strip_tags_attributes($_POST['newemail']));
-	$user = $_SESSION['user'];
-
-	$sql = "UPDATE users SET email='$newemail' WHERE name='$user'";
-	if (mysqli_query($db, $sql)) {
-		echo 1;
+	$userToSet = addslashes(strip_tags_attributes($_POST['user']));
+	$user = $sessionUser;
+	if ($userToSet === $user || $sessionMode === 'admin') {
+		$sql = "UPDATE users SET email='$newemail' WHERE name='$userToSet'";
+		if (mysqli_query($db, $sql)) {
+			echo 1;
+		} else {
+			echo 0;
+		}
 	} else {
-		echo 0;
+		echo 'user does not match userSet';
 	}
 }
 
 if(isset($_POST['userlist'])) {
 	if ($_POST['userlist'] == 'all') {
-		if(isset($_SESSION['mode'])) {
-			if($_SESSION['mode'] === 'admin') {
+		if(isset($sessionMode)) {
+			if($sessionMode === 'admin') {
 				$sql="SELECT * FROM Users";
 				$users = mysqli_query($db, $sql);
 				//echo '<table class="table-userlist">';
@@ -139,4 +154,4 @@ if(isset($_POST['userlist'])) {
 	}
 }
 
-//echo $_SESSION['mode'];
+//echo $sessionMode;

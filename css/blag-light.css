@@ -1,6 +1,6 @@
 /*@import '/css/fonts.css';*/
 
-	* { text-decoration: none !important; list-style-type: none !important;}
+	* { text-decoration: none; list-style-type: none !important;}
 
 	html, body {
     	height: 100% !important;
@@ -11,7 +11,8 @@
           transition: all .2s ease-in-out;
 	}
 	.blag-body a:hover, .blag-reply-body a:hover {
-		color: #D4A017;
+		/*color: #D4A017;*/
+		color: #c04000;
 	}
 	.blag-body img, .blag-body p iframe, .blag-body p video {
 		max-width: 100%;
@@ -221,7 +222,7 @@ body {
 .alert-error {
 	opacity: 0;
 	position: absolute;
-	bottom: 20px;
+	bottom: 60px;
 	right: 20px;
 	padding: 2px auto 2px auto;
 	text-align: center;
@@ -396,7 +397,6 @@ hr {
 	width: 63%;
 	height: 30%;
 	position: relative;
-	background: rgba(0,0,0,0);
 	border-color: #bbb;
 }
 .userinfo .btn {
@@ -418,6 +418,21 @@ hr {
 	position: absolute;
 	visibility: hidden;
 }
+.userinfo-footer-l {
+	bottom: 10px;
+	left: 10px;
+	position: absolute;
+	color: #c04000;
+}
+.usersetting-content {
+	margin-left: 10px;
+	font-style: normal;
+}
 .blag-reply-body {
 	margin-top: 20px;
+}
+.modal-header {
+	background:#ccc; 
+	border-top-left-radius: 5px; 
+	border-top-right-radius: 5px;
 }

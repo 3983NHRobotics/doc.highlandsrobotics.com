@@ -12,5 +12,5 @@
 			$grav_custom = "https://avatars3.githubusercontent.com/u/4484323?v=2&s=80";
 			$usecustombg = "true";
 			$custombg = "http://i.imgur.com/XvCxlq3.jpg";
-			$showpageloadtime = "";
+			$showpageloadtime = "true";
 			

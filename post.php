@@ -215,7 +215,7 @@ $starttime = $time;
 				if ($row['isNSFW'] == 1) {
 				//echo 'isNSFW = true;<br>';
 				if ($_SESSION['mode'] == 'user') { //hide post
-					echo '<p class="maturecontent-warning">please <a href="login.php">log in</a> to view this post</p>';
+					echo '<p class="maturecontent-warning">please <a href="" data-toggle="modal" data-target="#myModal">log in</a> to view this post</p>';
 				} else if ($age < 18) { //hide post
 					echo '<p class="maturecontent-warning">This has been tagged as NSFW</p>';
 				} else if ($age >= 18 && $filterPref == 1) { //show button
@@ -271,7 +271,7 @@ $starttime = $time;
 				echo '</div>';
 			}
 
-		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Replies");
+		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Replies WHERE reply_to='$reply_to'");
 		$row = mysqli_fetch_row($pages);
 		$total_things = $row[0];
 		$total_pages = ceil($total_things / 10); //gets the number of pages for pagination

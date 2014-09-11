@@ -13,7 +13,7 @@ if (!isset($_SESSION['filterPref'])) {
 } else {
 	$filterPref = $_SESSION['filterPref'];
 }
-error_reporting(0);//remove for debug
+//error_reporting(0);//remove for debug
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
@@ -23,7 +23,7 @@ $starttime = $time;
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>The Blag</title>
+    <title>NhRobo Documentation</title>
     <?php
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
     	if ($usecustombg == "true") {
@@ -44,23 +44,7 @@ $starttime = $time;
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 
     <style type="text/css">
-    	.maturecontent-wrapper {
-    		width: 100%;
-    	}
-    	.maturecontent-hidden {
-    		display: none;
-    	}
-    	p.maturecontent-warning {
-    		text-align: center;
-    		margin-left: auto;
-    		margin-right: auto;
-    		position: relative;
-    	}
-    	button.maturecontent-warning {
-    		height: 40px;
-    		position: relative;
-    		border: #aaa 1px solid;
-    	}
+
     </style>
   </head>
 <body>
@@ -127,7 +111,7 @@ $starttime = $time;
 			}
 		}
 
-		require('includes/user.php');
+		require('includes/dbinfo.php');
 
 		$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
         if (mysqli_connect_errno()) {
@@ -155,7 +139,7 @@ $starttime = $time;
 		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,10"); //This works!
 
 		date_default_timezone_set('America/New_York'); //set timezone
-		try {
+		/*try {
 			$date1 = new DateTime($_SESSION['age']); //compare age from database with current time
 			$date2 = new DateTime();
 			$interval = $date1->diff($date2);
@@ -163,15 +147,15 @@ $starttime = $time;
 			//echo "difference " . $interval->y . " years, " . $interval->m." months, ".$interval->d." days ";
 		} catch (Exception $e){
 			//do nothing :D
-		}
+		}*/
 
 		while($row = mysqli_fetch_array($body)) {
 		    echo '<div class="blag-body">';
-			echo '<a href="post.php?reply_to=' . $row['PID'] . '"><h3>' . $row['title'] . '</h3></a>';
+			echo '<u><a href="post.php?reply_to=' . $row['PID'] . '"><h3>' . $row['title'] . '</h3></a></u>';
 			if ($row['isNSFW'] == 1) {
 				//echo 'isNSFW = true;<br>';
 				if ($_SESSION['mode'] == 'user') { //hide post
-					echo '<p class="maturecontent-warning">please <a href="login.php">log in</a> to view this post</p>';
+					echo '<p class="maturecontent-warning">please <a href="" data-toggle="modal" data-target="#myModal">log in</a> to view this post</p>';
 				} else if ($age < 18) { //hide post
 					echo '<p class="maturecontent-warning">This has been tagged as NSFW</p>';
 				} else if ($age >= 18 && $filterPref == 1) { //show button
@@ -212,7 +196,7 @@ $starttime = $time;
 	}
 	?>
 	<div class="footer">
-		<div class="pagn" style="float:left">&copy; 2014 Theodore Kluge</div>
+		<div class="pagn" style="float:left">Made with &#9829; by Theodore Kluge</div>
 		<div class="pagn">
 			Pages: 
 			<?php

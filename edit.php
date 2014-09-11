@@ -215,10 +215,10 @@ if(!isset($_SESSION['user'])) {
 					<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title" value="<?php echo $row['title'] ?>">
 					<?php } else { ?>
 					<input type="hidden" name="type" value="reply">
-					<input type="hidden" name="return_to" value="<?php $_GET['return_to'] ?>"
+					<input type="hidden" name="return_to" value="<?php $_GET['return_to'] ?>">
 					<?php } ?>
 					<p><textarea class="editpage-content" name="content" id="content" rows="18" cols="60" placeholder="Write stuffs here"><?php echo $row['content']; ?></textarea>
-
+					<?php if(!isset($_POST['type'])) { ?>
 					Tags and stuff:
 					<p><input class="editpage-content" type="text" placeholder="Separate tags with spaces" value="<?php echo $row['tags']; ?>" name="tags">
 
@@ -226,7 +226,7 @@ if(!isset($_SESSION['user'])) {
 					<input class="" type="radio" value="1" name="nsfwcheck" id="cb1" <?php echo ($row['isNSFW'] == 1)?'checked':'' ?>><label for="cb1">Yes</label>
 					<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" <?php echo ($row['isNSFW'] == 0)?'checked':'' ?>><label for="cb2">No</label>
 					<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
-
+					<?php } ?>
 					</form>
 				  	<?php
 				}
