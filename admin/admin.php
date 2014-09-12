@@ -7,12 +7,13 @@ if (!isset($_SESSION['mode'])) {
 if(!isset($_SESSION['user'])) {
 	$_SESSION['user'] = 'Guest';
 }
+require('../includes/config.php');
 error_reporting(0);//remove for debug
 ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Blag - Admin</title>
+    <title><?php echo $siteTitle ?> - Admin</title>
 
         <?php
     	require ('../includes/config.php');
@@ -187,6 +188,7 @@ error_reporting(0);//remove for debug
 			}
 
 			$settings = '<?php
+			$siteTitle = "' . addslashes($_POST['sitename']) . '";
 			$title = "' . addslashes($_POST['sitename']) . '";
 			$greeting = "' . addslashes($_POST['sitegreeting']) . '";
 			$greetingContent = "' . addslashes($_POST['sitegreeting-content']) . '";
@@ -200,6 +202,7 @@ error_reporting(0);//remove for debug
 			$usecustombg = "' . $_POST['usecustombg'] . '";
 			$custombg = "' . $_POST['custombg'] . '";
 			$showpageloadtime = "' . $_POST['showpageloadtime'] . '";
+			$postsPerPage = "' . $_POST['postsperpage'] . '";
 			';
 
 			$fp = fopen("../includes/config.php", "w");
@@ -211,8 +214,6 @@ error_reporting(0);//remove for debug
         	header('Location: ' . $_SERVER['REQUEST_URI']);
 		}
 
-		require('../includes/config.php');
-
 		?>
 <section class="tabs tab-menu">
 	<ul class="tab-links">
@@ -220,7 +221,7 @@ error_reporting(0);//remove for debug
 		<li class="active"><a href="#tab-titles">Titles</a></li>
 		<li class=""><a href="#tab-colors">Colors</a></li>
 		<li class=""><a href="#tab-includes">Includes</a></li>
-		<!-- <li class=""><a href="#tab-display">Display</a></li> -->
+		<li class=""><a href="#tab-display">Display</a></li>
 		<li class=""><a href="#tab-gravatar">Gravatar</a></li>
 		<li class=""><a href="#tab-users" onclick="getUserlist()">User list</a></li>
 	</ul>
@@ -231,6 +232,9 @@ error_reporting(0);//remove for debug
 <!-- Site greeting, name and stuff like that -->
 		<div class="admin-control admin-control-style tab active" id="tab-titles">
 		<div class="ac-title">Titles:</div>
+
+		<!-- <label class="acc-title">Site Title:</label>
+		<input class="acc-content" name="sitetitle" id="sitename" type="text" value="<?php echo $siteTitle; ?>"> -->
 
 		<label class="acc-title">Site Name:</label>
 		<input class="acc-content" name="sitename" id="sitename" type="text" value="<?php echo $title; ?>">
@@ -246,6 +250,7 @@ error_reporting(0);//remove for debug
 <!-- Stylesheet settings -->
 		<ul class="acc-options-list">
 		<li><input class="acc-radio" type="radio" name="theme" value="light" size="17" <?php echo ($theme=='light')?'checked':'' ?>><span class="acc-content">Light stylesheet</span>
+		<li><input class="acc-radio" type="radio" name="theme" value="nhrobo" size="17" <?php echo ($theme=='nhrobo')?'checked':'' ?>><span class="acc-content">NHROBO stylesheet</span>
 		<li><input class="acc-radio" type="radio" name="theme" value="fancy" size="17" <?php echo ($theme=='fancy')?'checked':'' ?>><span class="acc-content">Fancy stylesheet</span>
 		<li><input class="acc-radio" type="radio" name="theme" value="custom" size="17" <?php echo ($theme=='custom')?'checked':'' ?>><span class="acc-content">Custom stylesheet</span>
 		<li><input class="acc-checkbox" type="checkbox" name="usecustombg" value="true" size="17" <?php echo ($usecustombg=='true')?'checked':'' ?>><span class="acc-content">Use custom image for background? (use fancy stylesheet)</span>
@@ -271,7 +276,8 @@ error_reporting(0);//remove for debug
 		<div class="admin-control admin-control-reset tab" id="tab-display">
 		<div class="ac-title">Display settings:</div>
 		<ul class="acc-options-list">
-		<li><input class="acc-checkbox" type="checkbox" value="true" size="17"><span class="acc-content">Display stuff?</span>
+		<label class="acc-title">Posts to display per page:</label>
+		<input class="acc-content" name="postsperpage" id="postsperpage" type="text" value="<?php echo $postsPerPage; ?>">
 		</ul>
 		</div>
 <!-- Gravatar stuff -->

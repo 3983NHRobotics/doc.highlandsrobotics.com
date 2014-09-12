@@ -14,12 +14,15 @@ if (!isset($_SESSION['filterPref'])) {
 	$filterPref = $_SESSION['filterPref'];
 }
 //error_reporting(0);//remove for debug
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>The Blag</title>
+    <title><?php echo $siteTitle ?></title>
     <?php
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
     	if ($usecustombg == "true") {
@@ -140,7 +143,7 @@ if (!isset($_SESSION['filterPref'])) {
 					</script>
 					<div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
 							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
@@ -236,7 +239,7 @@ if (!isset($_SESSION['filterPref'])) {
 						    <input class="userinfo-config-content" name="uemailsub" type="text" id="uemail" value="<?php echo $email; ?>" placeholder="Email address" required>
 						    <button class="userinfo-config-submit" onclick="submitEmail()">Submit</button>
 		</section>
-		<a href="" data-toggle="modal" data-target="#advancedsettingsmodal"><span class="userinfo-footer-l">Slightly more advanced settings</span></a>
+		<!-- <a href="" data-toggle="modal" data-target="#advancedsettingsmodal"><span class="userinfo-footer-l">Slightly more advanced settings</span></a> -->
 			<?php 
 			} else { 
 				echo '<p class="userinfo-bio">';
@@ -254,7 +257,7 @@ if (!isset($_SESSION['filterPref'])) {
 
 
 	<div class="footer" style="bottom:0px; position: absolute">
-		<div class="pagn" style="float:left">&copy; 2014 Theodore Kluge</div>
+		<div class="pagn" style="float:left">Made with <span class="pink">&#9829;</span> by Theodore Kluge</div>
 	</div>
 
 <!-- Modal -->
@@ -348,13 +351,13 @@ if (!isset($_SESSION['filterPref'])) {
 
 	function recordName() {
 		$('.userinfo-working').css('visibility','visible');
-		$('input.userinfo-username-edit').css('background','#f3e5ab');
+		//$('input.userinfo-username-edit').css('background','#f3e5ab');
 		currentName = $('input.userinfo-username-edit').val();
 		console.log("recorded name " + currentName);
 	}
 	function recordBio() {
 		$('.userinfo-working').css('visibility','visible');
-		$('textarea#bio').css('background','#f3e5ab');
+		//$('textarea#bio').css('background','#f3e5ab');
 		currentBio = $('textarea#bio').val();
 		console.log("recorded bio " + currentBio);
 	}
@@ -404,7 +407,7 @@ if (!isset($_SESSION['filterPref'])) {
 			console.log("bio " + currentBio + " not changed");
 			$('.userinfo-working').css('visibility','hidden');
 		}
-		$('textarea#bio').css('background','white');
+		//$('textarea#bio').css('background','white');
 	}
 	$('#upass, #upass2').on('input', function checkPass() {
 		

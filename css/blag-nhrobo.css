@@ -1,0 +1,101 @@
+body {
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      -ms-background-size: 100% 100%;
+      background-size: 100% 100%;
+      background-repeat:no-repeat;
+      background-attachment:fixed;
+      line-height: 100%;
+        display: block;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+background-color: #111 !important;
+color: #fff !important
+  }
+
+  a {
+    color: #dc381f !important;
+  }
+
+.alert-error {
+  background: rgba(255,255,255,.5);
+}
+.header, .header-admin, .admin-control, .footer {
+  background: rgba(255,255,255,.02);
+  border-color: #000;
+}
+.footer {
+  color: #333;
+  border-color: #000;
+}
+.header a, .header-admin a, .header span, .header-admin span {
+  color: #fff !important;
+}
+.header a:hover, .header-admin a:hover {
+  color: #dc381f;
+}
+.loginpage-title {
+  text-shadow: none;
+}
+.blag-body, .userinfo, .blag-reply-body {
+  -webkit-box-shadow: none;
+  background: rgba(255,255,255,.02);
+  max-width: 75%;
+  width: 75%;
+  color: #fff;
+  border-color: #000;
+}
+.btn-submit {
+  background: rgba(255,255,255,.15);
+  color: #999;
+}
+.btn-submit:hover {
+  background: rgba(0,0,0,.35);
+}
+.btn-lock:hover {
+  color: #0f0 !important;
+}
+.btn-unlock:hover {
+  color: #f00 !important;
+}
+.loginpage-content {
+  background: rgba(255,255,255,.05);
+  border: #222 1px solid;
+}
+.tab-links > li > a {
+  background: rgba(255,255,255,.05);
+}
+.tab-links > li.active a {
+  background: rgba(255,0,0,.35);
+}
+.tab-links > li > a:hover {
+  background: rgba(255,255,255,.10);
+}
+.tab-links > li.active a:hover {
+  background: rgba(255,0,0,.55);
+}
+.editdelbtn {
+  border-color: #aaa;
+  color: #bbb;
+}
+.pink {
+  color: #F778A1;
+}
+.table-userlist {
+  background: rgba(255,255,255,.05) !important;
+}
+textarea, input {
+  background: rgba(255,255,255,.05) !important;
+  border: #333 1px solid !important;
+}
+select {
+  color: #555 !important;
+}
+.modal-header {
+  background: #555;
+}
+.modal-body input, .modal-body textarea {
+  color: #000;
+}

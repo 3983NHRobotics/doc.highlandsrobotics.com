@@ -4,10 +4,20 @@ require('includes/user.php');
 require('includes/config.php');
 //connect to database  
 $db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
+if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        }
 $sessionMode = $_SESSION['mode'];
 $sessionUser = $_SESSION['user'];
 date_default_timezone_set('America/New_York');
-error_reporting(0); //messing up my replies
+$display_errors = false;
+if ($display_errors) {
+	error_reporting(E_ALL | E_STRICT); //messing up my replies
+	ini_set('display_errors',1);
+	ini_set('display_startup_errors',1);
+} else {
+	error_reporting(0);
+}
 
 function strip_tags_attributes( $str, 
 		    $allowedTags = array('<a>','<b>','<blockquote>','<br>','<cite>','<code>','<del>','<div>','<em>','<ul>','<ol>','<li>','<dl>','<dt>','<dd>','<img>','<video>','<iframe>','<ins>','<u>','<q>','<h3>','<h4>','<h5>','<h6>','<samp>','<strong>','<sub>','<sup>','<p>','<table>','<tr>','<td>','<th>','<pre>','<span>'), 
@@ -16,14 +26,18 @@ function strip_tags_attributes( $str,
 		    if( empty($disabledEvents) ) {
 		        return strip_tags($str, implode('', $allowedTags));
 		    }
-		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
+		    return preg_replace('/<(.*?)>/ies', "'<' . preg_replace(array('/javascript:[^\"\']i', '/(" . implode('|', $disabledEvents) . ")=[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", strip_tags($str, implode('', $allowedTags)));
 		}
+/*function strip_tags_attributes($str) {
+	return $str;
+}*/
 
 if(isset($_POST['username'])) {
 
-	$username = addslashes(strip_tags_attributes($_POST['username']));  
+	$username = addslashes(strip_tags_attributes($_POST['username']));
+	$dql = "SELECT name from Users where name = '". $username . "'";
 	 
-	$result = mysqli_query($db, "SELECT NAME from USERS where NAME = '". $username . "'");  
+	$result = mysqli_query($db, $sql);  
 	  
 	//if number of rows fields is bigger them 0 that means it's NOT available '  
 	if(mysqli_num_rows($result)>0){  
@@ -37,12 +51,16 @@ if(isset($_POST['udname'])) {
 	$udname = addslashes(strip_tags_attributes($_POST['udname']));
 	$userToSet = addslashes(strip_tags_attributes($_POST['user']));
 	$user = $sessionUser;
+	$sql = "UPDATE Users SET disname='$udname' WHERE name='$userToSet'";
 	if ($userToSet === $user || $sessionMode === 'admin') {
-		if (mysqli_query($db, "UPDATE USERS SET disname='$udname' WHERE name='$userToSet'")) {
+		if (mysqli_query($db, $sql)) {
 			echo 1;
 		} else {
 			echo 0;
+			echo mysqli_error($db);
 		}
+	} else {
+		echo 'denied';
 	}
 }
 
@@ -67,8 +85,9 @@ if(isset($_POST['deletepost'])) {
 			$pid = $_POST['postid'];
 			$sql = "DELETE FROM Posts WHERE PID=$pid";
 			mysqli_query($db, $sql);
-			echo 'hello';
-			header('Location: ' . dirname($_SERVER['REQUEST_URI']) . '/index.php');
+			//echo 'hello';
+			//header('Location: ' . dirname($_SERVER['REQUEST_URI']) . '/index.php');
+			echo '<script type="text/javascript">location.href = "' . dirname($_SERVER['REQUEST_URI']) . '";</script>';
 		}
 	}
 }
@@ -84,7 +103,7 @@ if(isset($_POST['newpass'])) {
 		                'cost' => 11,
 		            ];
 			$passtoset = password_hash($newpass, PASSWORD_BCRYPT, $options);
-			$sql = "UPDATE users SET pass='$passtoset' WHERE name='$userToSet'";
+			$sql = "UPDATE Users SET pass='$passtoset' WHERE name='$userToSet'";
 			if (mysqli_query($db, $sql)) {
 				echo 1;
 			} else {
@@ -98,10 +117,11 @@ if(isset($_POST['newpass'])) {
 
 if(isset($_POST['newemail'])) {
 	$newemail = addslashes(strip_tags_attributes($_POST['newemail']));
+	//$newemail = addslashes($_POST['newemail']);
 	$userToSet = addslashes(strip_tags_attributes($_POST['user']));
 	$user = $sessionUser;
 	if ($userToSet === $user || $sessionMode === 'admin') {
-		$sql = "UPDATE users SET email='$newemail' WHERE name='$userToSet'";
+		$sql = "UPDATE Users SET email='$newemail' WHERE name='$userToSet'";
 		if (mysqli_query($db, $sql)) {
 			echo 1;
 		} else {

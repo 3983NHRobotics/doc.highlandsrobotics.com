@@ -8,15 +8,17 @@ if(!isset($_SESSION['user'])) {
 	$_SESSION['user'] = 'Guest';
 }
 
+require ('includes/config.php');
+require('includes/user.php');
+
 ?>
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
-    <title>The Blag - Edit</title>
+    <title><?php echo $siteTitle ?> - Edit</title>
         <?php
-    	require ('/includes/config.php');
-    	require('/includes/user.php');
+
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
     	if ($usecustombg == "true") {
 				echo '<style type="text/css">body{background: url("' . $custombg . '")}</style>';
@@ -119,7 +121,8 @@ if(!isset($_SESSION['user'])) {
 
 	            mysqli_close($db);
 
-				header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				//header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+				echo '<script type="text/javascript">location.href = "' . dirname($_SERVER['REQUEST_URI']) . '";</script>';
 
 			}
 
@@ -146,10 +149,10 @@ if(!isset($_SESSION['user'])) {
 
 		        if(!isset($_POST['type'])) {
 		        	$sql = "UPDATE Posts SET title='$newtitle', content='$newcontent', tags='$newtags', isNSFW='$isNSFW' WHERE PID=$postid";
-		        	$header = dirname($_SERVER['REQUEST_URI']) . '/index.php?p=' . $return_to;
+		        	$header = dirname($_SERVER['REQUEST_URI']) . 'index.php?p=' . $return_to;
 		        } else {
 		        	$sql = "UPDATE Replies SET content='$newcontent' WHERE PID=$postid";
-		        	$header = dirname($_SERVER['REQUEST_URI']) . '/post.php?reply_to=' . $return_to;
+		        	$header = dirname($_SERVER['REQUEST_URI']) . 'post.php?reply_to=' . $return_to;
 		        }
 
 		        if (!mysqli_query($db,$sql)) {
@@ -157,18 +160,20 @@ if(!isset($_SESSION['user'])) {
 	            }
 
 		        mysqli_close($db);
-		        header('Location: ' . $header);
+		        //header('Location: ' . $header);
+		        echo '<script type="text/javascript">location.href = "' . $header . '";</script>';
+		        //echo $header;
 			}
 			
 		?>
 
 <div class="header-admin">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" type="submit" name="Logout" class="btn-lock" onclick="document.logout.submit();"><i class="fa fa-lock"></i></a>
-							<a href="/blag/user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
-							<a href="/blag/admin/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
-							<a href="/blag/edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
+							<a href="user.php?u=<?php echo $_SESSION['user']; ?>" class="btn btn-random"><i class="fa fa-user"></i></a>
+							<a href="admin/admin.php" class="btn btn-random"><i class="fa fa-dashboard"></i></a>
+							<a href="edit.php" class="btn btn-random"><i class="fa fa-pencil"></i></a>
 							<span class='msg-welcome'>Heyo, <?php echo strtok($_SESSION['username'], ' '); ?>!</span>
 						</span>
 					</div>	
@@ -181,15 +186,16 @@ if(!isset($_SESSION['user'])) {
 		if(!isset($_GET['action'])) { ?>
 			<form action="" method="post" name="submit" id="submit">
 
-			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title">
+			<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Team# and Name">
 
 			<p><textarea class="editpage-content" name="content" id="content" rows="18" cols="60" placeholder="Write stuffs here"></textarea>
 			Tags and stuff:
 			<p><input class="editpage-content" type="text" placeholder="Separate tags with spaces" value="" name="tags">
 
-			<p><span class="">Tag for mature content?</span>
+			<!-- <p><span class="">Tag for mature content?</span>
 			<input class="" type="radio" value="1" name="nsfwcheck" id="cb1"><label for="cb1">Yes</label>
-			<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" checked><label for="cb2">No</label>
+			<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" checked><label for="cb2">No</label> -->
+			<input class="" type="hidden" value="0" name="nsfwcheck">
 			<p><input class="btn btn-submit" type="submit" name="Submit" value="Post">
 
 			</form>
@@ -212,7 +218,7 @@ if(!isset($_SESSION['user'])) {
 				  	<form action="" method="post" name="Edit" id="edit">
 				  	<input type="hidden" name="postid" value="<?php echo $postid; ?>">
 				  	<?php if(!isset($_POST['type'])) { ?>
-					<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Title" value="<?php echo $row['title'] ?>">
+					<p><input class="editpage-content" name="title" id="title" type="text" placeholder="Team# and Name" value="<?php echo $row['title'] ?>">
 					<?php } else { ?>
 					<input type="hidden" name="type" value="reply">
 					<input type="hidden" name="return_to" value="<?php $_GET['return_to'] ?>">
@@ -222,11 +228,12 @@ if(!isset($_SESSION['user'])) {
 					Tags and stuff:
 					<p><input class="editpage-content" type="text" placeholder="Separate tags with spaces" value="<?php echo $row['tags']; ?>" name="tags">
 
-					<p><span class="">Tag for mature content?</span>
+					<!-- <p><span class="">Tag for mature content?</span>
 					<input class="" type="radio" value="1" name="nsfwcheck" id="cb1" <?php echo ($row['isNSFW'] == 1)?'checked':'' ?>><label for="cb1">Yes</label>
-					<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" <?php echo ($row['isNSFW'] == 0)?'checked':'' ?>><label for="cb2">No</label>
-					<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
+					<input class="" type="radio" value="0" name="nsfwcheck" id="cb2" <?php echo ($row['isNSFW'] == 0)?'checked':'' ?>><label for="cb2">No</label> -->
+					<input class="" type="hidden" value="0" name="nsfwcheck">
 					<?php } ?>
+					<p><input class="btn btn-submit" type="submit" name="Edit" value="Update">
 					</form>
 				  	<?php
 				}

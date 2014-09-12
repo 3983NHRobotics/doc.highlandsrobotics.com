@@ -8,4 +8,3 @@ $dbhost = "localhost";
 
 $dbname = "blag";
 
-$installed = true;

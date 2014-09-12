@@ -2,6 +2,7 @@
 session_start();
 
 require('includes/config.php');
+require('includes/password_newfunctions.php');
 
 $_SESSION['theme'] = $theme;
 //if (!isset($_SESSION['mode'])) {
@@ -15,7 +16,7 @@ if(!isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>The Blag</title>
+    <title><?php echo $siteTitle ?> - Login</title>
     <?php
     	require ('/includes/config.php');
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
@@ -115,7 +116,7 @@ if(!isset($_SESSION['user'])) {
 					</script>
 					<div class="header">
 						<span class="header-content">
-							<a href="/blag" class="btn homebtn"><i class="fa fa-home"></i></a>
+							<a href="index.php" class="btn homebtn"><i class="fa fa-home"></i></a>
 							<a href="#" class="btn-unlock" data-toggle="modal" data-target="#myModal"><i class="fa fa-unlock-alt"></i></a>
 						</span>
 					</div>
@@ -186,9 +187,11 @@ if(!isset($_SESSION['user'])) {
 				checkMode('login');
 
 				if ($_SERVER['REQUEST_URI'] == dirname($_SERVER['REQUEST_URI']) . '/login.php') {
-					header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+					//header('Location: ' . dirname($_SERVER['REQUEST_URI']));
+					echo '<script type="text/javascript">location.href = "index.php";</script>';
 				} else {
-					header('Location: ' . $_SERVER['HTTP_REFERER']); //this doesnt work, add a thing to the login.php form to check if the form is from this page
+					//header('Location: ' . $_SERVER['HTTP_REFERER']); //this doesnt work, add a thing to the login.php form to check if the form is from this page
+					echo '<script type="text/javascript">location.href = "index.php";</script>';
 				}
 				die();
 			} else {

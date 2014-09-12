@@ -1,5 +1,6 @@
 <?php
 require('includes/config.php');
+require('includes/password_newfunctions.php');
 
 $_SESSION['theme'] = $theme;
 //if (!isset($_SESSION['mode'])) {
@@ -14,7 +15,7 @@ if(!isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>The Blag</title>
+    <title><?php echo $siteTitle ?> - Register</title>
     <?php
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
     	if ($usecustombg == "true") {

@@ -33,7 +33,7 @@ $starttime = $time;
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>The Blag</title>
+    <title><?php echo $siteTitle ?></title>
     <?php
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
     	if ($usecustombg == "true") {
@@ -278,7 +278,7 @@ $starttime = $time;
 	}
 	?>
 	<div class="footer">
-		<div class="pagn" style="float:left">&copy; 2014 Theodore Kluge</div>
+		<div class="pagn" style="float:left">Made with <span class="pink">&#9829;</span> by Theodore Kluge</div>
 		<div class="pagn">
 			Pages: 
 			<?php
@@ -410,6 +410,9 @@ $starttime = $time;
 	    }
 	});
 
+	$('pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
 	</script>
 
 	<!--<script>

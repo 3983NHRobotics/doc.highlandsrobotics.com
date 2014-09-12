@@ -23,7 +23,7 @@ $starttime = $time;
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>NhRobo Documentation</title>
+    <title><?php echo $siteTitle ?></title>
     <?php
     	echo '<link rel="stylesheet" href="css/blag-light.css">';
     	if ($usecustombg == "true") {
@@ -35,6 +35,12 @@ $starttime = $time;
     		echo '<link rel="stylesheet" href="css/pace/pace-centerbar.css">';
     		echo '<script src="js/pace/pace.min.js"></script>';
     	}
+
+    	if($localcode) {
+    echo '<script src="js/jquery.min.js"></script>';
+	} else {
+    echo '<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>';
+	}
     ?>
         <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -44,7 +50,23 @@ $starttime = $time;
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 
     <style type="text/css">
-
+    	.maturecontent-wrapper {
+    		width: 100%;
+    	}
+    	.maturecontent-hidden {
+    		display: none;
+    	}
+    	p.maturecontent-warning {
+    		text-align: center;
+    		margin-left: auto;
+    		margin-right: auto;
+    		position: relative;
+    	}
+    	button.maturecontent-warning {
+    		height: 40px;
+    		position: relative;
+    		border: #aaa 1px solid;
+    	}
     </style>
   </head>
 <body>
@@ -111,7 +133,7 @@ $starttime = $time;
 			}
 		}
 
-		require('includes/dbinfo.php');
+		require('includes/user.php');
 
 		$db = mysqli_connect($dbhost,$dbuname,$dbupass,$dbname);
         if (mysqli_connect_errno()) {
@@ -135,11 +157,12 @@ $starttime = $time;
 				  </div>';
 		}
 
-		$start_page = ($pagenumber - 1) * 10;
-		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,10"); //This works!
+		//$postsPerPage = 20;
+		$start_page = ($pagenumber - 1) * $postsPerPage;
+		$body = mysqli_query($db,"SELECT * FROM Posts ORDER BY PID DESC LIMIT $start_page,$postsPerPage"); //This works!
 
 		date_default_timezone_set('America/New_York'); //set timezone
-		/*try {
+		try {
 			$date1 = new DateTime($_SESSION['age']); //compare age from database with current time
 			$date2 = new DateTime();
 			$interval = $date1->diff($date2);
@@ -147,12 +170,12 @@ $starttime = $time;
 			//echo "difference " . $interval->y . " years, " . $interval->m." months, ".$interval->d." days ";
 		} catch (Exception $e){
 			//do nothing :D
-		}*/
+		}
 
 		while($row = mysqli_fetch_array($body)) {
 		    echo '<div class="blag-body">';
 			echo '<u><a href="post.php?reply_to=' . $row['PID'] . '"><h3>' . $row['title'] . '</h3></a></u>';
-			if ($row['isNSFW'] == 1) {
+			/*if ($row['isNSFW'] == 1) {
 				//echo 'isNSFW = true;<br>';
 				if ($_SESSION['mode'] == 'user') { //hide post
 					echo '<p class="maturecontent-warning">please <a href="" data-toggle="modal" data-target="#myModal">log in</a> to view this post</p>';
@@ -165,9 +188,9 @@ $starttime = $time;
 				} else if ($age >= 18 && $filterPref == 0) { //show post
 					echo '<p>' . $row['content'] . '</p>';
 				}
-			} else {
+			} else {*/
 				echo '<p>' . $row['content'] . '</p>';
-			}
+			//}
 
 			echo '<span class="timestamp">Posted by '. $row['creator'] . ' - ' . $row['timestamp'] . '</span>';
 
@@ -192,11 +215,11 @@ $starttime = $time;
 		$pages = mysqli_query($db, "SELECT COUNT(*) FROM Posts");
 		$row = mysqli_fetch_row($pages);
 		$total_things = $row[0];
-		$total_pages = ceil($total_things / 10); //gets the number of pages for pagination
+		$total_pages = ceil($total_things / $postsPerPage); //gets the number of pages for pagination
 	}
 	?>
 	<div class="footer">
-		<div class="pagn" style="float:left">Made with &#9829; by Theodore Kluge</div>
+		<div class="pagn" style="float:left">Made with <span class="pink">&#9829;</span> by Theodore Kluge</div>
 		<div class="pagn">
 			Pages: 
 			<?php
@@ -258,13 +281,7 @@ $starttime = $time;
 	<form action="login.php" method="post" name="logout" id="logout">
 		<input type="hidden" value="logout">
 	</form>
-	<?php 
-	if($localcode) {
-    echo '<script src="js/jquery.min.js"></script>';
-	} else {
-    echo '<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>';
-	}
-	?>
+
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.smoothscroll.js"></script>
     <script src="js/blag.js"></script>
@@ -310,6 +327,10 @@ $starttime = $time;
 		$('#maturecontent-hidden-' + pid).css('display', 'block');
 		$('.maturecontent-warning').css('display','none');
 	}
+
+	$('pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
 	</script>
 
 	<!--<script>
